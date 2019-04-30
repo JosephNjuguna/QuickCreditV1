@@ -29,5 +29,15 @@ class Authentication {
 		}
 		return false;
 	}
+
+	async loginUser() {
+		const obj = db.find(o => o.email === this.payload);
+		if (obj) {
+			this.result = obj;
+			return true;
+		}
+		return false;
+	}
+	
 }
 export default Authentication;
