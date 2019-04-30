@@ -1,6 +1,7 @@
 import db from '../db/users';
 
 class Authentication {
+	
 	constructor(payload = null) {
 		this.payload = payload;
 		this.result = null;
@@ -37,6 +38,15 @@ class Authentication {
 			return true;
 		}
 		return false;
+	}
+
+	async userProfile() {
+		const obj = db.find(o => o.id === parseInt(this.payload) || o.userid === this.payload);
+		if (!obj) {
+			return false;
+		}
+		this.result = obj;
+		return true;
 	}
 	
 }

@@ -3,6 +3,7 @@ import Token from '../helpers/Jwt';
 import EncryptData from '../helpers/Encrypt';
 import userDate from '../helpers/Date';
 import Userid from '../helpers/Uid';
+import jwt from 'jsonwebtoken';
 
 const status = 'unverified';
 const isAdmin = false;
@@ -99,6 +100,32 @@ class Authentication {
 			return res.status.json({
 				status: 500,
 				message: 'Internal server error',
+			});
+		}
+	}
+
+	static async userProfile(req, res) {
+		try {
+			const token = req.headers.authorization.split(' ')[1];
+			const decoded = jwt.verify(token, process.env.JWT_KEY);
+			req.userData = decoded;
+			const userProfileid = req.userData.id;			
+
+			const userInfo = new Usermodel(userProfileid);
+			if (!await userInfo.userProfile()) {
+				return res.status(404).json({
+					message: 'user Id not found',
+				});
+			}
+			return res.status(200).json({
+				status: 200,
+				message: 'welcome',
+				user: userInfo.result,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				status: 500,
+				message: 'internal server error',
 			});
 		}
 	}

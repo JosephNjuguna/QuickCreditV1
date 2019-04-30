@@ -41,7 +41,7 @@ describe('/USER PROFILE', () => {
 				.get('/api/v1/profile')
 				.set('authorization', `Bearer ${wrongIdToken}`)
 				.end((err, res) => {
-                    expect(res.body.status).equal(404);
+					res.should.have.status(404);
 					if (err) return done();
 					done();
 				});
@@ -52,7 +52,7 @@ describe('/USER PROFILE', () => {
 				.get('/api/v1/profile')
 				.set('authorization', `Bearer ${userToken}`)
 				.end((err, res) => {
-                    expect(res.body.status).equal(200);
+					res.should.have.status(200);
 					if (err) return done();
 					done();
 				});
