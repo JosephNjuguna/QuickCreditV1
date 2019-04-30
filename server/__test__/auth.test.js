@@ -128,4 +128,44 @@ describe('/AUTHENTICATION',()=>{
 				});
         });
 	});
+	describe('/POST login', () => {
+		it('should have user email', (done) => {
+			chai.request(app)
+				.post('/api/v1/login')
+				.send({
+					email: '',
+					password: 'qwerQ@qwerre123'
+				})
+				.end((err, res) => {
+					res.should.have.status(400);
+					if (err) return done();
+					done();
+				});
+		});
+		it('should have user password ', (done) => {
+			chai.request(app)
+				.post('/api/v1/login')
+				.send({
+					email: 'test1@mail.com',
+					password: '',
+				})
+				.end((err, res) => {
+					res.should.have.status(400);
+					if (err) return done();
+					done();
+				});
+		});
+		it('should successfully log in user', (done) => {
+			chai.request(app)
+				.post('/api/v1/login')
+				.send({
+					email: 'test1@mail.com',
+					password: 'qwerQ@qwerre123'
+				}).end((err, res) => {
+					res.should.have.status(200);
+					if (err) return done();
+					done();
+				});
+		});
+	});
 });
