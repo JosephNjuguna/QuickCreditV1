@@ -4,7 +4,7 @@ import Users from '../controllers/User';
 
 const route = express.Router();
 
-route.post('/signup',Validation.validatesignup, Users.registerUser);
-route.post('/login');
+route.post('/signup', Validation.validatesignup, Users.registerUser);
+route.post('/login',  Validation.validatelogin, Users.loginUser);
 
 export default route;

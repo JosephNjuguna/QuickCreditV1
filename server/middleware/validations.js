@@ -2,6 +2,7 @@ import reqResponses from '../helpers/Responses';
 
 let message;
 class Validations {
+	
 	static async validatesignup(req, res, next) {
 		try {
 			const {
@@ -64,5 +65,34 @@ class Validations {
 			return reqResponses.handleError(error.toString(), 500, res);
 		}
 	}
+
+	static async validatelogin(req, res, next) {
+		try {
+			const {
+				email,
+				password,
+			} = req.body;
+
+			let re;
+			if (email === '' || password === '' || !email || !password) {
+				message = 'Ensure all fields are filled';
+				return reqResponses.handleError(message, 400, res);
+			}
+			if (email) {
+				re = /(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)/;
+				message = 'enter valid email';
+				if (!re.test(email) || email === '') return reqResponses.handleError(message, 400, res);
+			}
+			if (password) {
+				re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(\W|_)).{7,}$/;
+				message = 'enter valid password ';
+				if (!re.test(password)) return reqResponses.handleError(message, 400, res);
+			}
+			next();
+		} catch (error) {
+			return reqResponses.handleError(error.toString(), 500, res);
+		}
+	}
+
 }
 export default Validations;
