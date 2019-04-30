@@ -1,0 +1,27 @@
+{
+  "name": "quickcreditv1",
+  "version": "1.0.0",
+  "description": "version 1 of QuickCredit",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephNjuguna/QuickCreditV1.git"
+  },
+  "keywords": [
+    "quickcredit",
+    "node"
+  ],
+  "author": "Joseph Njuguna NJeri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosephNjuguna/QuickCreditV1/issues"
+  },
+  "homepage": "https://github.com/JosephNjuguna/QuickCreditV1#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
