@@ -20,13 +20,6 @@ class Authentication {
 				email,
 				password,
 			} = req.body;
-			console.log(firstname,
-				lastname,
-				address,
-				email,
-				password);
-			
-
 			const hashedPassword = EncryptData.generateHash(password);
 
 			const addUser = new Usermodel({
@@ -59,6 +52,7 @@ class Authentication {
 				data: addUser.result,
 			});
 		} catch (error) {
+			console.log(error);
 			return res.status(500).json({
 				status: 500,
 				message: 'internal server error',
