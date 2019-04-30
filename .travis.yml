@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- stable
+cache: 
+directories:
+- node_modules
+script:
+- npm run test
+after_success:
+- npm run coverage
+notifications:
+  email: false
+env:
+  global:
+  - secure: AP6tsUNczo6FNM/W3K4wZ2fFj6Y54HBu4xTr90nCLluw3K1LtXiaLr6nWz7mCYqPD3STR+PwXMNqx/xl+VqyyMj4E/0YSOwIvFgykvoXjFj68svvoXvI7iVYpnbUncwEwRlHteIHRuFhFfP5H8iYDf4BrLdWvmZIFhqkgx8TRSASC3vu7R/t+f0+8WsBuVJrqhcqJHqfix7A1oavXK3Jks4Dz0H6TTIxVO5XLDdKRqiFsmoGY/EQB8bQof7v/lswo++KVeVV3DglHpBZ9Ha31a/LdW9vcUTHpNxuIrAVCELlYjtlyqhxkR2q7gwhuI9tRRS1jfsCHy/JJYGVrMlvT7rYjGusnRiDZ2Ih2XO9uBpRf/fJ/ufS9M0od/JGkYIKfRniZC9YUwaKJaIAuew0VhvJLFjRC8/uqIfCjylmVeUmkfA+7p1GF2TAIMtD6yF02dy4k2uL5xI6IAfjdOr15OgoRn+wxw57Gmj8+mLnE7FV2u7XKlKEbc+I46RwJNXcU4kaXXL24sYQsYM88h6ut99p16h/LhX3oAB1+UA9dFAEG/cgCs/XbrU9cBcujyJCX7dJgMzu4hBWnaQeT6mXCPBd4dMDBsVtvOd3XLzNQSAgOudO9gzi7jwqH+QVhuIDZCUBA6LUsRmmb5FunM6RqeL7r9VTzITnIzoWFFSFSGA=
