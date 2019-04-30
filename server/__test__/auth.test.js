@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 describe('/AUTHENTICATION',()=>{
     describe('/POST signup', () => {
 
-		it('should check firstname', (done) => {
+		it('should check user has firstname field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
 				.send({
@@ -26,7 +26,7 @@ describe('/AUTHENTICATION',()=>{
 				});
         });
         
-		it('should check lastname', (done) => {
+		it('should check user has lastname field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
 				.send({
@@ -41,9 +41,26 @@ describe('/AUTHENTICATION',()=>{
 					if (err) return done();
 					done();
 				});
+		});
+
+		it('should check user has address field and value', (done) => {
+			chai.request(app)
+				.post('/api/v1/signup')
+				.send({
+					firstname: 'testfirstname',
+					lastname: 'testlastname',
+					address: '',
+					email: 'test1@mail.com',
+					password: 'qwerQ@qwerre123'
+				})
+				.end((err, res) => {
+					res.should.have.status(400);
+					if (err) return done();
+					done();
+				});
         });
         
-		it('should check user email', (done) => {
+		it('should check user has email field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
 				.send({
@@ -60,7 +77,7 @@ describe('/AUTHENTICATION',()=>{
 				});
         });
         
-		it('should check user password', (done) => {
+		it('should check user has password field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
 				.send({
