@@ -4,8 +4,8 @@
   "description": "version 1 of QuickCredit",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js --exec babel-node --",
+    "lint": "node_modules/.bin/eslint ./ --fix"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,13 @@
   "homepage": "https://github.com/JosephNjuguna/QuickCreditV1#readme",
   "dependencies": {
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "nodemon": "^1.18.11"
   }
 }
