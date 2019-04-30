@@ -20,6 +20,12 @@ class Authentication {
 				email,
 				password,
 			} = req.body;
+			console.log(firstname,
+				lastname,
+				address,
+				email,
+				password);
+			
 
 			const hashedPassword = EncryptData.generateHash(password);
 
@@ -33,7 +39,7 @@ class Authentication {
 				status,
 				isAdmin,
 				signedupDate,
-			});
+			});			
 			if (!await addUser.registerUser()) {
 				return res.status(409).json({
 					status: 409,
