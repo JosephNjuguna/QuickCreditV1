@@ -1,7 +1,7 @@
 import db from '../db/users';
 
 class Authentication {
-	
+
 	constructor(payload = null) {
 		this.payload = payload;
 		this.result = null;
@@ -9,7 +9,15 @@ class Authentication {
 
 	async registerUser() {
 		const {
-			userId, email, firstname, lastname, hashedPassword, address, status, isAdmin, signedupDate,
+			userId,
+			email,
+			firstname,
+			lastname,
+			hashedPassword,
+			address,
+			status,
+			isAdmin,
+			signedupDate,
 		} = this.payload;
 		const user = {
 			userId,
@@ -48,6 +56,32 @@ class Authentication {
 		this.result = obj;
 		return true;
 	}
-	
+
+	async verifyUser() {
+		const {
+			status,
+			email
+		} = this.payload;
+		const obj = db.find(o => o.email === email);
+		if (!obj) {
+			return false;
+		} else {
+			const verifiedUser = {
+				id: obj.id,
+				email: obj.email,
+				firstname: obj.firstname,
+				lastname: obj.lastname,
+				password: obj.password,
+				address: obj.address,
+				status: status || obj.status,
+				isAdmin: obj.isadmin,
+				userid: obj.userid,
+				signedup_date: obj.signedup_date
+			};
+			db.splice(obj.id - 1, 1, verifiedUser);
+			this.result = verifiedUser;
+			return true;
+		}
+	}
 }
 export default Authentication;
