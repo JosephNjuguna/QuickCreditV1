@@ -80,7 +80,16 @@ class LoanModel {
 			return false;
 		}
 
-    }
-    
+	}
+	
+	async allLoanapplications() {
+		if (db.length === 0) {
+			this.result = "There are no any loan applications"
+			return false;
+		}
+		this.result = db;
+		return true;
+	}
+
 }
 export default LoanModel;
