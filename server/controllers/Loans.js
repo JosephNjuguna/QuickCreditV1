@@ -55,6 +55,22 @@ class Loans {
 		});
 	}
 
+	static async oneLoanapplication(req, res) {
+		const loanId = req.params.loan_id;
+		const oneloanData = new Models(loanId);
+
+		if (!await oneloanData.oneloanapplication()) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Id not found',
+			});
+		}
+		return res.status(200).json({
+			status: 200,
+			data: oneloanData.result,
+		});
+	}
+
 }
 
 export default Loans;
