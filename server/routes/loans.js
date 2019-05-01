@@ -14,4 +14,9 @@ route.get('/loans',
 	checkAuth.checkAdmin,
 	loans.allLoanapplications);
 
+route.get('/loan/:loan_id',
+	checkAuth.checkAdmin,
+	validation.validateID,
+	loans.oneLoanapplication);
+
 export default route;
