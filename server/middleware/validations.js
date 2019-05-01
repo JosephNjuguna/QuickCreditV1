@@ -94,5 +94,27 @@ class Validations {
 		}
 	}
 
+	static async validateLoan(req, res, next) {
+		const { loan } = req.body;
+
+		let re;
+
+		if (!loan || loan === '') {
+			return res.status(400).json({
+				status: 400,
+				message: 'loan field required',
+			});
+		}
+		if (loan) {
+			re = /[0-9_]{3,}/;
+			if (!re.test(loan)) {
+				return res.status(400).json({
+					message: 'enter 3 digits or more',
+				});
+			}
+		}
+		next();
+	}
+
 }
 export default Validations;
