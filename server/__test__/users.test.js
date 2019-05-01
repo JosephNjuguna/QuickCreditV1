@@ -76,13 +76,13 @@ describe('/USER PROFILE', () => {
 		
 		it('should check user email is not available', (done) => {
 			chai.request(app)
-				.patch('/api/v1/user/test1@mail.com/verify')
+				.patch('/api/v1/user/test2@mail.com/verify')
 				.set('authorization', `Bearer ${adminToken}`)
 				.send({
 					status: "verified"
 				})
 				.end((err, res) => {
-					expect(res.body.status).equals(404);
+					expect(res.status).equals(404);
 					if (err) return done();
 					done();
 				});

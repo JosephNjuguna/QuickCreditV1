@@ -130,6 +130,33 @@ class Authentication {
 		}
 	}
 
+	static async verifyUser(req, res) {
+		try {
+			const email = req.params.email;
+			const status = req.body.status;
+			
+			const userVerifaction = new Usermodel({email, status});
+			if (!await userVerifaction.verifyUser()) {
+				return res.status(404).json({
+					success: false,
+					message: 'User email not found',
+				});
+			}			
+			return res.status(200).json({
+				status: 200,
+				message: 'user verified successfully',
+				data: userVerifaction.result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res.status(500).json({
+				status: 500,
+				message: 'internal server error',
+			});
+		}
+	}
+
+
 };
 
 export default Authentication;
