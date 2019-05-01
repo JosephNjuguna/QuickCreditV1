@@ -104,12 +104,12 @@ describe('/LOAN', () => {
 
     describe('/GET admin', () => {
 
-        it('should that user is not admin', (done) => {
+        it('should check that user is not admin', (done) => {
             chai.request(app)
                 .get('/api/v1/loans')
                 .set('authorization', `Bearer ${userToken}`)
                 .end((err, res) => {
-                    res.should.have.status(400);
+                    res.should.have.status(401);
                     if (err) return done();
                     done();
                 });
