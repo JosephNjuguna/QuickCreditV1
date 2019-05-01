@@ -4,10 +4,21 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 
 chai.use(chaiHttp);
-let userToken;
+let userToken, adminToken;
 
 describe('/LOAN', () => {
     before('generate JWT', (done) => {
+        adminToken = jwt.sign({
+                email: 'admin123@gmail.com',
+                id: 1,
+                firstname: 'main',
+                lastname: 'admin',
+                address: 'database',
+            },
+            process.env.JWT_KEY, {
+                expiresIn: '1h',
+            });
+
         userToken = jwt.sign({
                 email: 'joenjuguna482@gmail.com',
                 id: 2,
@@ -90,4 +101,30 @@ describe('/LOAN', () => {
         });
 
     });
+
+    describe('/GET admin', () => {
+
+        it('should that user is not admin', (done) => {
+            chai.request(app)
+                .get('/api/v1/loans')
+                .set('authorization', `Bearer ${userToken}`)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should get all loan applications', (done) => {
+            chai.request(app)
+                .get('/api/v1/loans')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    if (err) return done();
+                    done();
+                });
+        });
+
+    })
 });
