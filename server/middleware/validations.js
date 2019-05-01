@@ -94,6 +94,25 @@ class Validations {
 		}
 	}
 
+	static async validateID(req, res, next) {
+		try {
+			const {
+				id,
+			} = req.params;
+			const re = /^[a-zA-Z]/;
+			if (id) {
+				if (id === '*' || id === '@' || id === '+' || id === '--' || re.test(id)) {
+					return res.status(404).json({
+						message: 'Your url is invalid',
+					});
+				}
+			}
+			next();
+		} catch (error) {
+			return reqResponses.handleError(error.toString(), 500, res);
+		}
+	}
+
 	static async validateLoan(req, res, next) {
 		const { loan } = req.body;
 
