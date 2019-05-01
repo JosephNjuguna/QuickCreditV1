@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server.js --exec babel-node --",
     "test": "nyc mocha --require babel-register ./server/__test__/*.js  --timeout 150000 --exit",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
     "lint": "node_modules/.bin/eslint ./ --fix"
   },
   "repository": {
@@ -46,7 +46,7 @@
   },
   "nyc": {
     "exclude": [
-      "**/*.spec.js",
+      "**/*.test.js",
       "build"
     ]
   }
