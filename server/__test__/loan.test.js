@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 
+const {
+    expect
+} = chai;
 chai.use(chaiHttp);
 let userToken, adminToken;
 
@@ -118,6 +121,28 @@ describe('/LOAN', () => {
         it('should get all loan applications', (done) => {
             chai.request(app)
                 .get('/api/v1/loans')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should check a loan id is not available', (done) => {
+            chai.request(app)
+                .get('/api/v1/loan/30000')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    expect(res.body.message).equals("Id not found");
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should get a single loan application', (done) => {
+            chai.request(app)
+                .get('/api/v1/loan/1')
                 .set('authorization', `Bearer ${adminToken}`)
                 .end((err, res) => {
                     res.should.have.status(200);
