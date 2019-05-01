@@ -91,5 +91,14 @@ class LoanModel {
 		return true;
 	}
 
+	async oneloanapplication() {
+		const obj = db.find(o => o.id === parseInt(this.payload) || o.loanId === this.payload);
+		if (!obj) {
+			return false;
+		}
+		this.result = obj;
+		return true;
+	}
+	
 }
 export default LoanModel;
