@@ -39,7 +39,21 @@ class Loans {
 			message: 'Loan request successful',
 			data: loanModel.result,
 		});
-    }
+	}
+	
+	static async allLoanapplications(req, res) {
+		const loanData = new Models();
+		if (!await loanData.allLoanapplications()) {
+			return res.status(404).json({
+				status: 404,
+				message: loanData.result,
+			});
+		}
+		return res.status(200).json({
+			status: 200,
+			data: loanData.result,
+		});
+	}
 
 }
 
