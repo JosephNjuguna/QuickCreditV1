@@ -99,6 +99,35 @@ class LoanModel {
 		this.result = obj;
 		return true;
 	}
+
+	async acceptloanapplication() {
+		const {
+			loanId,
+			status
+		} = this.payload;
+		const obj = db.find(o => o.id === parseInt(loanId) || o.loanId === loanId);
+		if (!obj) {
+			return false;
+		}
+		const loanAccept = {
+			id: obj.id,
+			loanId: obj.loanId,
+			user: obj.user,
+			requestedOn: obj.requestedOn,
+			status: status,
+			repaid: obj.repaid,
+			tenor: obj.tenor,
+			principalAmount: obj.principalAmount,
+			paymentInstallment: obj.paymentInstallment,
+			totalAmounttopay: obj.totalAmounttopay,
+			balance: obj.totalAmounttopay,
+			interestRate: obj.interestRate,
+		};
+		db.splice(obj.id - 1, 1, loanAccept);
+		this.result = loanAccept;
+		return true;
+	}
+
 	
 }
 export default LoanModel;
