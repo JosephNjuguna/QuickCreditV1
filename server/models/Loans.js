@@ -1,4 +1,5 @@
 import db from '../db/loans';
+import payments from '../db/payments';
 
 class LoanModel {
 
@@ -52,7 +53,7 @@ class LoanModel {
 			requestedOn,
 			loanId,
 		} = this.payload;
-		
+
 		const amount = parseFloat(loan);
 		var b = await this.totalAmountdata(amount);
 		const obj = await db.find(o => o.user === email);
@@ -76,12 +77,104 @@ class LoanModel {
 			db.push(loanInfo);
 			this.result = loanInfo;
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 
 	}
-	
+
+	async payloan() {
+
+		const {
+			loanInstallment,
+			email,
+			userId,
+			paidOn,
+			loanId
+		} = this.payload;
+		const amount = parseFloat(loanInstallment);
+		const obj = db.find(o => o.id === parseInt(loanId));
+
+		if (obj) {
+			const userLoanPayments = payments.filter(o => o.loanId = obj.loanId);
+			if (userLoanPayments.length === 0) {
+				this.result = 'kindly wait for your application to be accepted'
+				return false;
+			} else {
+				if (userLoanPayments.length === 1) {
+
+					let payment = userLoanPayments[0];
+					if (payment.paymentNo == 0) {
+						let newPayment = {
+							loanId: obj.loanId,
+							user: obj.user,
+							amount: obj.totalAmounttopay,
+							installmentsAmount: payment.paid = amount,
+							balance: payment.balance = obj.totalAmounttopay - amount,
+							paymentNo: payment.paymentNo = 1,
+							paidOn: paidOn
+						}
+						this.result = newPayment;
+						return true;
+					} else {
+						let newPayment = {
+							loanId: obj.loanId,
+							user: obj.user,
+							amount: obj.totalAmounttopay,
+							installmentsAmount: amount,
+							balance: payment.balance - amount,
+							paymentNo: 2,
+							paidOn: paidOn
+						}
+						payments.push(newPayment);
+						this.result = newPayment;
+						return true;
+					}
+				} else {
+					const paymentsCount = userLoanPayments.length;
+					let latestPayment = userLoanPayments[paymentsCount - 1];
+					if (latestPayment.balance === 0) {
+						const loanAccept = {
+							id: obj.id,
+							loanId: obj.loanId,
+							user: obj.user,
+							requestedOn: obj.requestedOn,
+							status: obj.status,
+							repaid: true,
+							tenor: obj.tenor,
+							principalAmount: obj.principalAmount,
+							paymentInstallment: obj.paymentInstallment,
+							totalAmounttopay: obj.totalAmounttopay,
+							balance: obj.totalAmounttopay,
+							interestRate: obj.interestRate,
+							paidOn: paidOn
+						};
+						db.splice(obj.id - 1, 1, loanAccept);
+						this.result = "Thank for completing your loan payment"
+						return true;
+					} else {
+						let newPayment = {
+							loanId: obj.loanId,
+							user: obj.user,
+							amount: obj.totalAmounttopay,
+							installmentsAmount: amount,
+							balance: latestPayment.balance - amount,
+							paymentNo: paymentsCount + 1,
+							paidOn: paidOn
+						}
+						payments.push(newPayment);
+						this.result = newPayment;
+						return true;
+					}
+				}
+			}
+		} else if (!obj) {
+			this.result = "There was an error paying your loan";
+			return false;
+
+		}
+	}
+
 	async allLoanapplications() {
 		if (db.length === 0) {
 			this.result = "There are no any loan applications"
@@ -109,6 +202,16 @@ class LoanModel {
 		if (!obj) {
 			return false;
 		}
+		const aPayment = {
+			loanId: obj.loanId,
+			user: obj.user,
+			amount: obj.totalAmounttopay,
+			balance: obj.totalAmounttopay,
+			paid: 0,
+			paymentNo: 0
+		}
+		payments.push(aPayment)
+
 		const loanAccept = {
 			id: obj.id,
 			loanId: obj.loanId,
@@ -130,17 +233,20 @@ class LoanModel {
 
 	async loanRepaidstatus() {
 
-		const { status,repaid } = this.payload;
-		
+		const {
+			status,
+			repaid
+		} = this.payload;
+
 		let repaidStatus;
 
-		if(repaid === 'false'){
+		if (repaid === 'false') {
 			repaidStatus = false;
-		}else if(repaid === 'true'){
+		} else if (repaid === 'true') {
 			repaidStatus = true;
 		}
 
-		const obj = db.filter(o => o.status === status && o.repaid === repaidStatus);		
+		const obj = db.filter(o => o.status === status && o.repaid === repaidStatus);
 		if (obj.length === 0) {
 			return false;
 		}
@@ -148,6 +254,6 @@ class LoanModel {
 		return true;
 	}
 
-	
+
 }
 export default LoanModel;

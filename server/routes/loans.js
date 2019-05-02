@@ -27,4 +27,9 @@ route.get('/loan',
 	checkAuth.checkAdmin,
 	loans.loanRepaidstatus);
 
+route.post('/payloan/:loan_id',
+	checkAuth.checkUser,
+	validation.validateLoan,
+	loans.payloan);
+
 export default route;
