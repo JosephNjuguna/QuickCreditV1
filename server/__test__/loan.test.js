@@ -8,6 +8,8 @@ const {
 } = chai;
 chai.use(chaiHttp);
 let userToken, adminToken;
+const loanId = 1;
+const wrongId = 1232;
 
 describe('/LOAN', () => {
 
@@ -27,7 +29,7 @@ describe('/LOAN', () => {
                 email: 'josephnjuguna482@gmail.com',
                 id: 2,
                 firstname: 'Joseph',
-				lastname: 'Njuguna',
+                lastname: 'Njuguna',
                 address: 'Kenya',
             },
             process.env.JWT_KEY, {
@@ -106,7 +108,7 @@ describe('/LOAN', () => {
 
     });
 
-    describe('/GET admin', () => {
+    describe('/GET admin get all loan applications', () => {
 
         it('should check that user is not admin', (done) => {
             chai.request(app)
@@ -154,7 +156,7 @@ describe('/LOAN', () => {
 
     });
 
-    describe('/PATCH loan', () => {
+    describe('/PATCH admin accepte loan application', () => {
 
         it('should check token is provided', (done) => {
             chai.request(app)
@@ -170,7 +172,7 @@ describe('/LOAN', () => {
                 });
         });
 
-        it('should check a loan id is available', (done) => {
+        it('should check a loan id is not available', (done) => {
             chai.request(app)
                 .patch('/api/v1/loan/122')
                 .set('authorization', `Bearer ${adminToken}`)
@@ -238,8 +240,7 @@ describe('/LOAN', () => {
     });
 
     describe('/POST user pay loan', () => {
-        const loanId = 1;
-        const wrongId = 1232;
+
 
         it('check user has no token', (done) => {
             chai.request(app)
@@ -254,8 +255,8 @@ describe('/LOAN', () => {
 
         it('check user has not entered amount to pay', (done) => {
             chai.request(app)
-            .post(`/api/v1/payloan/${loanId}`)
-            .set('authorization', `Bearer ${userToken}`)
+                .post(`/api/v1/payloan/${loanId}`)
+                .set('authorization', `Bearer ${userToken}`)
                 .send({
                     amount: ''
                 })
@@ -275,40 +276,80 @@ describe('/LOAN', () => {
                 })
                 .end((err, res) => {
                     expect(res.status).equals(404)
-                    if (err)                     
-                    return done();
+                    if (err)
+                        return done();
                     done();
                 });
         });
 
         it('check user has entered amount to pay', (done) => {
             chai.request(app)
-            .post(`/api/v1/payloan/${loanId}`)
-            .set('authorization', `Bearer ${userToken}`)
+                .post(`/api/v1/payloan/${loanId}`)
+                .set('authorization', `Bearer ${userToken}`)
                 .send({
                     amount: 575
                 })
                 .end((err, res) => {
                     expect(res.status).equals(200)
-                    if (err)                     
-                    return done();
+                    if (err)
+                        return done();
                     done();
                 });
         });
 
         it('check user has entered amount to pay second time', (done) => {
             chai.request(app)
-            .post(`/api/v1/payloan/${loanId}`)
-            .set('authorization', `Bearer ${userToken}`)
+                .post(`/api/v1/payloan/${loanId}`)
+                .set('authorization', `Bearer ${userToken}`)
                 .send({
                     amount: 575
                 })
                 .end((err, res) => {
                     expect(res.status).equals(200)
-                    if (err)                     
-                    return done();
+                    if (err)
+                        return done();
                     done();
                 });
         });
     });
+
+    describe('/GET user get loan payment history', () => {
+
+        it('check user has no token', (done) => {
+            chai.request(app)
+                .get(`/api/v1/paymenthistory/${loanId}`)
+                .set('authorization', ``)
+                .end((err, res) => {
+                    expect(res.status).equals(400)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should check a loan id is not available', (done) => {
+            chai.request(app)
+                .get(`/api/v1/paymenthistory/${wrongId}`)
+                .set('authorization', `Bearer ${userToken}`)
+                .send({
+                    status: 'accepted'
+                })
+                .end((err, res) => {
+                    expect(res.body.message).equals("Loan Id not found")
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should check a loan id is available', (done) => {
+            chai.request(app)
+                .get(`/api/v1/paymenthistory/${loanId}`)
+                .set('authorization', `Bearer ${userToken}`)
+                .end((err, res) => {
+                    expect(res.body.status).equals(200)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+    })
 });
