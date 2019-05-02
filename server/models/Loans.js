@@ -128,6 +128,26 @@ class LoanModel {
 		return true;
 	}
 
+	async loanRepaidstatus() {
+
+		const { status,repaid } = this.payload;
+		
+		let repaidStatus;
+
+		if(repaid === 'false'){
+			repaidStatus = false;
+		}else if(repaid === 'true'){
+			repaidStatus = true;
+		}
+
+		const obj = db.filter(o => o.status === status && o.repaid === repaidStatus);		
+		if (obj.length === 0) {
+			return false;
+		}
+		this.result = obj;
+		return true;
+	}
+
 	
 }
 export default LoanModel;
