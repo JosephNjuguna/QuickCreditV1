@@ -10,6 +10,7 @@ chai.use(chaiHttp);
 let userToken, adminToken;
 
 describe('/LOAN', () => {
+
     before('generate JWT', (done) => {
         adminToken = jwt.sign({
                 email: 'admin123@gmail.com',
@@ -23,10 +24,10 @@ describe('/LOAN', () => {
             });
 
         userToken = jwt.sign({
-                email: 'joenjuguna482@gmail.com',
+                email: 'josephnjuguna482@gmail.com',
                 id: 2,
-                firstname: 'Joe',
-                lastname: 'Njuguna',
+                firstname: 'Joseph',
+				lastname: 'Njuguna',
                 address: 'Kenya',
             },
             process.env.JWT_KEY, {
@@ -61,11 +62,11 @@ describe('/LOAN', () => {
                 });
         });
 
-        it('should check loan amount is entered', (done) => {
+        it('should check loan amount is not entered', (done) => {
             chai.request(app)
                 .post('/api/v1/requestloan')
                 .send({
-                    'loan': "",
+                    amount: "",
                 })
                 .set('authorization', `Bearer ${userToken}`)
                 .end((err, res) => {
@@ -79,7 +80,7 @@ describe('/LOAN', () => {
             chai.request(app)
                 .post('/api/v1/requestloan')
                 .send({
-                    loan: 10000,
+                    amount: 10000,
                 })
                 .set('authorization', `Bearer ${userToken}`)
                 .end((err, res) => {
@@ -93,7 +94,7 @@ describe('/LOAN', () => {
             chai.request(app)
                 .post('/api/v1/requestloan')
                 .send({
-                    loan: 10000,
+                    amount: 10000,
                 })
                 .set('authorization', `Bearer ${userToken}`)
                 .end((err, res) => {
@@ -157,7 +158,7 @@ describe('/LOAN', () => {
 
         it('should check token is provided', (done) => {
             chai.request(app)
-                .patch('/api/v1/loan/3')
+                .patch('/api/v1/loan/1')
                 .set('authorization', ``)
                 .send({
                     status: 'accepted'
@@ -185,7 +186,7 @@ describe('/LOAN', () => {
 
         it('should update a loan application as accepted', (done) => {
             chai.request(app)
-                .patch('/api/v1/loan/3')
+                .patch('/api/v1/loan/1')
                 .set('authorization', `Bearer ${adminToken}`)
                 .send({
                     status: 'accepted'
@@ -196,7 +197,7 @@ describe('/LOAN', () => {
                     done();
                 });
         });
-        
+
     });
 
     describe('/GET  fully paid && not fully paid loan', () => {
@@ -237,12 +238,13 @@ describe('/LOAN', () => {
     });
 
     describe('/POST user pay loan', () => {
+        const loanId = 1;
+        const wrongId = 1232;
 
         it('check user has no token', (done) => {
             chai.request(app)
-                .post('/api/v1/payloan')
+                .post(`/api/v1/payloan/${loanId}`)
                 .set('authorization', ``)
-                .send({})
                 .end((err, res) => {
                     expect(res.status).equals(400)
                     if (err) return done();
@@ -252,8 +254,8 @@ describe('/LOAN', () => {
 
         it('check user has not entered amount to pay', (done) => {
             chai.request(app)
-                .post('/api/v1/payloan')
-                .set('authorization', userToken)
+            .post(`/api/v1/payloan/${loanId}`)
+            .set('authorization', `Bearer ${userToken}`)
                 .send({
                     amount: ''
                 })
@@ -264,37 +266,49 @@ describe('/LOAN', () => {
                 });
         });
 
+        it('check user loan id doesn`t exist', (done) => {
+            chai.request(app)
+                .post(`/api/v1/payloan/${wrongId}`)
+                .set('authorization', `Bearer ${userToken}`)
+                .send({
+                    amount: 575
+                })
+                .end((err, res) => {
+                    expect(res.status).equals(404)
+                    if (err)                     
+                    return done();
+                    done();
+                });
+        });
+
         it('check user has entered amount to pay', (done) => {
             chai.request(app)
-                .post('/api/v1/payloan')
-                .set('authorization', userToken)
+            .post(`/api/v1/payloan/${loanId}`)
+            .set('authorization', `Bearer ${userToken}`)
                 .send({
-                    amount: '575'
+                    amount: 575
                 })
                 .end((err, res) => {
                     expect(res.status).equals(200)
-                    if (err) return done();
+                    if (err)                     
+                    return done();
                     done();
                 });
         });
 
-        it('check user has completed loan payment', (done) => {
+        it('check user has entered amount to pay second time', (done) => {
             chai.request(app)
-                .post('/api/v1/payloan')
-                .set('authorization', userToken)
+            .post(`/api/v1/payloan/${loanId}`)
+            .set('authorization', `Bearer ${userToken}`)
                 .send({
-                    amount: '575'
+                    amount: 575
                 })
                 .end((err, res) => {
-                    if (res.body.balance === 0) {
-                        expect(res.body.message).equals("Thanks for completing loan repayment");
-                    } else {
-                        expect(res.status).equals(200);
-                    }
-                    if (err) return done();
+                    expect(res.status).equals(200)
+                    if (err)                     
+                    return done();
                     done();
                 });
         });
-
     });
 });
