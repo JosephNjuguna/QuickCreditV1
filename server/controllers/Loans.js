@@ -92,6 +92,28 @@ class Loans {
 		});
 	}
 
+	static async loanRepaidstatus(req, res) {
+		const {
+			status,
+			repaid,
+		} = req.query;
+		
+		const loanstatus = new Models({
+			status,
+			repaid
+		});
+		if (!await loanstatus.loanRepaidstatus()) {
+			return res.status(404).json({
+				status: 404,
+				message: 'no records found',
+			});
+		}
+		return res.status(200).json({
+			status: 200,
+			message: 'loan status',
+			data: loanstatus.result,
+		});
+	}
 }
 
 export default Loans;
