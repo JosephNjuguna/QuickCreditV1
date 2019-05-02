@@ -211,28 +211,6 @@ describe('/LOAN', () => {
                 });
         });
 
-        it('should check if no records of non-fully repaid loan are available', (done) => {
-            chai.request(app)
-                .get('/api/v1/loans?status=accepted&repaid=true')
-                .set('authorization', `Bearer ${adminToken}`)
-                .end((err, res) => {
-                    expect(res.body.message).equals("no records found")
-                    if (err) return done();
-                    done();
-                });
-        });
-        
-        it('should check if records of fully repaid loan are not available', (done) => {
-            chai.request(app)
-                .get('/api/v1/loans?status=accepted&repaid=rue')
-                .set('authorization', `Bearer ${adminToken}`)
-                .end((err, res) => {
-                    expect(res.body.message).equals("no records found")
-                    if (err) return done();
-                    done();
-                });
-        });
-
         it('should get all loans fully paid', (done) => {
             chai.request(app)
                 .get('/api/v1/loan?status=accepted&repaid=true')
