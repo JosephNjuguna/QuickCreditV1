@@ -114,7 +114,7 @@ class Validations {
 	}
 
 	static async validateLoan(req, res, next) {
-		const { loan } = req.body;
+		const loan = req.body.amount;
 
 		let re;
 
