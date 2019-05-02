@@ -23,4 +23,8 @@ route.patch('/loan/:loan_id',
 	checkAuth.checkAdmin,
 	loans.acceptloanapplication);
 
+route.get('/loan',
+	checkAuth.checkAdmin,
+	loans.loanRepaidstatus);
+
 export default route;
