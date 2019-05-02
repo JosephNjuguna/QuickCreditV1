@@ -196,6 +196,7 @@ describe('/LOAN', () => {
                     done();
                 });
         });
+        
     });
 
     describe('/GET  fully paid && not fully paid loan', () => {
@@ -235,4 +236,65 @@ describe('/LOAN', () => {
 
     });
 
+    describe('/POST user pay loan', () => {
+
+        it('check user has no token', (done) => {
+            chai.request(app)
+                .post('/api/v1/payloan')
+                .set('authorization', ``)
+                .send({})
+                .end((err, res) => {
+                    expect(res.status).equals(400)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('check user has not entered amount to pay', (done) => {
+            chai.request(app)
+                .post('/api/v1/payloan')
+                .set('authorization', userToken)
+                .send({
+                    amount: ''
+                })
+                .end((err, res) => {
+                    expect(res.status).equals(400)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('check user has entered amount to pay', (done) => {
+            chai.request(app)
+                .post('/api/v1/payloan')
+                .set('authorization', userToken)
+                .send({
+                    amount: '575'
+                })
+                .end((err, res) => {
+                    expect(res.status).equals(200)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('check user has completed loan payment', (done) => {
+            chai.request(app)
+                .post('/api/v1/payloan')
+                .set('authorization', userToken)
+                .send({
+                    amount: '575'
+                })
+                .end((err, res) => {
+                    if (res.body.balance === 0) {
+                        expect(res.body.message).equals("Thanks for completing loan repayment");
+                    } else {
+                        expect(res.status).equals(200);
+                    }
+                    if (err) return done();
+                    done();
+                });
+        });
+
+    });
 });
