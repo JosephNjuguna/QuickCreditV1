@@ -19,4 +19,8 @@ route.get('/loan/:loan_id',
 	validation.validateID,
 	loans.oneLoanapplication);
 
+route.patch('/loan/:loan_id',
+	checkAuth.checkAdmin,
+	loans.acceptloanapplication);
+
 export default route;
