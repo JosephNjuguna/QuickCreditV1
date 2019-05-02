@@ -151,43 +151,110 @@ describe('/LOAN', () => {
                 });
         });
 
-    })
-    describe('/PATCH loan', () =>{
+    });
+
+    describe('/PATCH loan', () => {
 
         it('should check token is provided', (done) => {
-			chai.request(app)
-				.patch('/api/v1/loan/3')
-				.set('authorization', ``)
-				.send({ status: 'accepted' })
-				.end((err, res) => {
+            chai.request(app)
+                .patch('/api/v1/loan/3')
+                .set('authorization', ``)
+                .send({
+                    status: 'accepted'
+                })
+                .end((err, res) => {
                     expect(res.status).equals(400)
-					if (err) return done();
-					done();
-				});
+                    if (err) return done();
+                    done();
+                });
         });
 
         it('should check a loan id is available', (done) => {
-			chai.request(app)
-				.patch('/api/v1/loan/122')
-				.set('authorization', `Bearer ${adminToken}`)
-				.send({ status: 'accepted' })
-				.end((err, res) => {
+            chai.request(app)
+                .patch('/api/v1/loan/122')
+                .set('authorization', `Bearer ${adminToken}`)
+                .send({
+                    status: 'accepted'
+                })
+                .end((err, res) => {
                     expect(res.body.message).equals("Loan Id not found")
-					if (err) return done();
-					done();
-				});
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should update a loan application as accepted', (done) => {
+            chai.request(app)
+                .patch('/api/v1/loan/3')
+                .set('authorization', `Bearer ${adminToken}`)
+                .send({
+                    status: 'accepted'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    if (err) return done();
+                    done();
+                });
+        });
+    });
+
+    describe('/GET  fully paid && not fully paid loan', () => {
+
+        it('should check token is provided', (done) => {
+            chai.request(app)
+                .get('/api/v1/loan?status=accepted&repaid=true')
+                .set('authorization', ``)
+                .end((err, res) => {
+                    expect(res.status).equals(400)
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should check if no records of non-fully repaid loan are available', (done) => {
+            chai.request(app)
+                .get('/api/v1/loans?status=accepted&repaid=true')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    expect(res.body.message).equals("no records found")
+                    if (err) return done();
+                    done();
+                });
         });
         
-        it('should update a loan application as accepted', (done) => {
-			chai.request(app)
-				.patch('/api/v1/loan/3')
-				.set('authorization', `Bearer ${adminToken}`)
-				.send({ status: 'accepted' })
-				.end((err, res) => {
-					res.should.have.status(200);
-					if (err) return done();
-					done();
-				});
-		});
-    })
+        it('should check if records of fully repaid loan are not available', (done) => {
+            chai.request(app)
+                .get('/api/v1/loans?status=accepted&repaid=rue')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    expect(res.body.message).equals("no records found")
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should get all loans fully paid', (done) => {
+            chai.request(app)
+                .get('/api/v1/loan?status=accepted&repaid=true')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    expect(res.status).equals(200);
+                    if (err) return done();
+                    done();
+                });
+        });
+
+        it('should get all loans NOT fully paid', (done) => {
+            chai.request(app)
+                .get('/api/v1/loan?status=accepted&repaid=false')
+                .set('authorization', `Bearer ${adminToken}`)
+                .end((err, res) => {
+                    expect(res.status).equals(200);
+                    if (err) return done();
+                    done();
+                });
+        });
+
+    });
+
 });
