@@ -2,7 +2,12 @@ import jwt from 'jsonwebtoken';
 import Models from '../models/Loans';
 import Date from '../helpers/Date';
 import LoanID from '../helpers/Uid';
+import dotenv from 'dotenv';
+import {
+	log
+} from 'util';
 
+dotenv.config();
 const loanId = LoanID.uniqueId();
 const requestedOn = Date.date();
 
@@ -19,7 +24,8 @@ class Loans {
 			email,
 			id
 		} = req.userData;
-		const { loan } = req.body;
+		const loan = req.body.amount;
+
 		const loanModel = new Models({
 			loan,
 			firstname,
@@ -29,7 +35,7 @@ class Loans {
 			requestedOn,
 			loanId
 		});
-		if (! await loanModel.requestloan()) {
+		if (!await loanModel.requestloan()) {
 			return res.status(409).json({
 				status: 409,
 				message: 'You cant request loan twice. You already have a loan request.',
@@ -40,7 +46,49 @@ class Loans {
 			data: loanModel.result,
 		});
 	}
-	
+
+	static async payloan(req, res) {
+		try {
+			const token = req.headers.authorization.split(' ')[1];
+			const decoded = jwt.verify(token, process.env.JWT_KEY);
+			req.userData = decoded;
+
+			const {
+				email,
+				id
+			} = req.userData;
+
+			const loanId = req.params.loan_id;
+			const loanInstallment = req.body.amount;
+
+			var paidOn = requestedOn;
+			const loanModel = new Models({
+				loanInstallment,
+				email,
+				id,
+				paidOn,
+				loanId
+			});
+
+			if (!await loanModel.payloan()) {
+				return res.status(404).json({
+					status: 404,
+					message: loanModel.result,
+				});
+			}
+			return res.status(200).json({
+				status: 200,
+				message: 'loan payment successful',
+				data: loanModel.result,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				status: 500,
+				message: 'internal server error',
+			});
+		}
+	}
+
 	static async allLoanapplications(req, res) {
 		const loanData = new Models();
 		if (!await loanData.allLoanapplications()) {
@@ -97,7 +145,7 @@ class Loans {
 			status,
 			repaid,
 		} = req.query;
-		
+
 		const loanstatus = new Models({
 			status,
 			repaid
@@ -114,6 +162,7 @@ class Loans {
 			data: loanstatus.result,
 		});
 	}
+
 }
 
 export default Loans;
