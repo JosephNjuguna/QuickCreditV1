@@ -71,6 +71,27 @@ class Loans {
 		});
 	}
 
+	static async acceptloanapplication(req, res) {
+		const loanId = req.params.loan_id;
+		const status = req.body.status;
+
+		const acceptLoan = new Models({
+			loanId,
+			status,
+		});
+		if (!await acceptLoan.acceptloanapplication()) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Loan Id not found',
+			});
+		}
+		return res.status(200).json({
+			status: 200,
+			message: 'loan accepted successfully',
+			data: acceptLoan.result,
+		});
+	}
+
 }
 
 export default Loans;
