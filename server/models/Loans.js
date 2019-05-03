@@ -52,8 +52,7 @@ class LoanModel {
 			userId,
 			requestedOn,
 			loanId,
-		} = this.payload;
-
+		} = this.payload;		
 		const amount = parseFloat(loan);
 		var b = await this.totalAmountdata(amount);
 		const obj = await db.find(o => o.user === email);
@@ -87,13 +86,11 @@ class LoanModel {
 
 		const {
 			loanInstallment,
-			email,
-			userId,
 			paidOn,
 			loanId
 		} = this.payload;
 		const amount = parseFloat(loanInstallment);
-		const obj = db.find(o => o.id === parseInt(loanId));
+		const obj = db.find(o => o.loanId === parseInt(loanId));
 
 		if (obj) {
 			const userLoanPayments = payments.filter(o => o.loanId = obj.loanId);
@@ -185,7 +182,7 @@ class LoanModel {
 	}
 
 	async oneloanapplication() {
-		const obj = db.find(o => o.id === parseInt(this.payload) || o.loanId === this.payload);
+		const obj = db.find(o => o.loanId === parseInt(this.payload));
 		if (!obj) {
 			return false;
 		}
@@ -198,7 +195,7 @@ class LoanModel {
 			loanId,
 			status
 		} = this.payload;
-		const obj = db.find(o => o.id === parseInt(loanId) || o.loanId === loanId);
+		const obj = db.find(o => o.loanId === parseInt(loanId));
 		if (!obj) {
 			return false;
 		}
@@ -254,6 +251,14 @@ class LoanModel {
 		return true;
 	}
 
-
+	async loanRepayment(){
+		const { email,loanId } = this.payload;
+		const obj = payments.filter(o => o.user === email && o.loanId === parseInt(loanId));
+		if (obj.length === 0) {
+			return false;
+		}
+		this.result = obj;
+		return true;
+	}
 }
 export default LoanModel;
