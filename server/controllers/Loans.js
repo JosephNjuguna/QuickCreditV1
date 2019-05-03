@@ -3,9 +3,6 @@ import Models from '../models/Loans';
 import Date from '../helpers/Date';
 import LoanID from '../helpers/Uid';
 import dotenv from 'dotenv';
-import {
-	log
-} from 'util';
 
 dotenv.config();
 const loanId = LoanID.uniqueId();
@@ -35,6 +32,7 @@ class Loans {
 			requestedOn,
 			loanId
 		});
+		
 		if (!await loanModel.requestloan()) {
 			return res.status(409).json({
 				status: 409,
@@ -64,8 +62,6 @@ class Loans {
 			var paidOn = requestedOn;
 			const loanModel = new Models({
 				loanInstallment,
-				email,
-				id,
 				paidOn,
 				loanId
 			});
@@ -160,6 +156,26 @@ class Loans {
 			status: 200,
 			message: 'loan status',
 			data: loanstatus.result,
+		});
+	}
+
+	static async repaymentHistory(req, res){
+		const token = req.headers.authorization.split(' ')[1];
+		const decoded = jwt.verify(token, process.env.JWT_KEY);
+		req.userData = decoded;
+
+		const email = req.userData.email;
+		const loanId = req.params.loan_id;
+		const paymentHistory = new Models({email,loanId});
+		if (!await paymentHistory.loanRepayment()) {
+			return res.status(404).json({
+				status: 404,
+				message: 'Loan Id not found',
+			});
+		}
+		return res.status(200).json({
+			status: 200,
+			data: paymentHistory.result,
 		});
 	}
 
