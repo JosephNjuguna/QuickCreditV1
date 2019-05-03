@@ -31,5 +31,9 @@ route.post('/payloan/:loan_id',
 	checkAuth.checkUser,
 	validation.validateLoan,
 	loans.payloan);
+	
+route.get('/paymenthistory/:loan_id',
+	checkAuth.checkUser,
+	loans.repaymentHistory);
 
 export default route;
