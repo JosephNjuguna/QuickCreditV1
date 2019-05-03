@@ -1,0 +1,727 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Quick Credit",
+    "description": "Quick Credit is an online lending platform.",
+    "contact": {
+      "email":"josephnjuguna482@gmail.com"
+    }
+  },
+  "host": "quickcredv1.herokuapp.com",
+  "basePath": "/api/v1",
+  "securityDefinitions": {},
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+
+    "/signup": {
+      "post": {
+        "description": "user sign up",
+        "summary": "new user create account",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "SignupPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "firstname",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "users firstname. should be 3 characters or more"
+          },
+          {
+            "name": "lastname",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "users last name"
+          },
+          {
+            "name": "address",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "user home address"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "users email address"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "users password. should be 3 character or more"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "sucessfully created account"
+          },
+          "400":{
+            "description": "Bad request. ensure required fields are filled"
+          },
+          "419":{
+            "description": "Conflict. email already in use"
+          },
+          "500":{
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/login": {
+      "post": {
+        "description": "users log in api endpoint",
+        "summary": "user login",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "LoginPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "existing users email address"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "password matching password of the email address used to sign up"
+          }
+        ],
+        "responses": {
+          "200":{
+            "description" : "User Logged In Successfully"
+          },
+          "400":{
+            "description" : "Bad request.Fields required"
+          },
+          "404":{
+            "description" : "Email not found"
+          },
+          "500":{
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/profile": {
+      "get": {
+        "description": "a user can view his/her profile .\nuser ID is derived from user webtoken",
+        "summary": "user view profile",
+        "tags": [
+          "User Profile"
+        ],
+        "operationId": "ProfileGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200":{
+            "description" : "user profile sucess"
+          },
+          "401":{
+            "description" : "Not authorized"
+          },
+          "500":{
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/updateprofile": {
+      "patch": {
+        "description": "TODO: Add Description",
+        "summary": "user update profile",
+        "tags": [
+          "User Profile"
+        ],
+        "operationId": "UpdateprofilePatch",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "firstname",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "responses": {
+            "200":{
+              "description" : "user profile sucess"
+            },
+            "401":{
+              "description" : "Not authorized"
+            },
+            "500":{
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "description": "the admin user can get all the users in the database. \nBoth verified and unverified.",
+        "summary": "Admin get all users",
+        "tags": [
+          "Admin User"
+        ],
+        "operationId": "UsersGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500":{
+            "description":"Internal server error"
+          }
+        }
+      }
+    },
+
+    "/user/4": {
+      "get": {
+        "description": "Admin user can get one user from the database\nusing userid",
+        "summary": "admin get  one user",
+        "tags": [
+          "Admin User"
+        ],
+        "operationId": "User4Get",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/user/edwardev@gmail.com/verify": {
+      "patch": {
+        "description": "admin can mark user as verified or unverified",
+        "summary": "verify user",
+        "tags": [
+          "Admin User"
+        ],
+        "operationId": "UserEdwardevGmailComVerifyPatch",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/requestloan": {
+      "post": {
+        "description": "TODO: Add Description",
+        "summary": "request loan",
+        "tags": [
+          "User request loan"
+        ],
+        "operationId": "RequestloanPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "loan",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "409": {
+            "description": "User has a  loan request already"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/viewloanrequest": {
+      "get": {
+        "description": "user can view there loan request",
+        "summary": "user view their loan request",
+        "tags": [
+          "User view their loan request status"
+        ],
+        "operationId": "ViewloanrequestGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/payloan": {
+      "post": {
+        "description": "user can pay their loans",
+        "summary": "user pay loan",
+        "tags": [
+          "User pay loan"
+        ],
+        "operationId": "PayloanPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "amount",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/loans": {
+      "get": {
+        "description": "get all loan applications by users",
+        "summary": "get all loans applications",
+        "tags": [
+          "Admin view all loan applications"
+        ],
+        "operationId": "LoansGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+
+    "/loan/6": {
+      "get": {
+        "description": "get a single loan by a user",
+        "summary": "get a specific loan application",
+        "tags": [
+          "Admin get one specific loan application"
+        ],
+        "operationId": "Loan6Get",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "description": "admin user can accept loan",
+        "summary": "accept loan application",
+        "tags": [
+          "Admin accept loan application"
+        ],
+        "operationId": "Loan6Patch",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+
+    "/loan": {
+      "get": {
+        "description": "Admin query loans based on their status",
+        "summary": "Admin query loans based on their status",
+        "tags": [
+          "Admin view loan based on their status: fully paid, not fully paid, not yet accepted"
+        ],
+        "operationId": "NotfullyrepaidGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "either : accepted, rejected, pending(not yet checked by admin)"
+          },
+          {
+            "name": "repaid",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "description": "true : for repaid loans"
+          },
+          {
+            "name": "repaid",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "false: for non-repaid or rejected loans"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "headers": {}
+          },
+          "404": {
+            "description": "no records found",
+            "headers": {}
+          }
+          ,
+          "400": {
+            "description": "Bad request.Token required",
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error",
+            "headers": {}
+          }
+        }
+      }
+    },
+
+    "/payments": {
+      "get": {
+        "description": "TODO: Add Description",
+        "summary": "check all payments",
+        "tags": [
+          "Admin check payments"
+        ],
+        "operationId": "PaymentsGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    }
+
+  },
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "User Profile"
+    },
+    {
+      "name": "Admin User"
+    },
+    {
+      "name": "User request loan"
+    },
+    {
+      "name": "User view their loan request status"
+    },
+    {
+      "name": "User pay loan"
+    },
+    {
+      "name": "Admin view all loan applications"
+    },
+    {
+      "name": "Admin get one specific loan application"
+    },
+    {
+      "name": "Admin accept loan application"
+    },
+    {
+      "name": "Admin view loan based on their status: fully paid, not fully paid, not yet accepted"
+    },
+    {
+      "name": "Admin check payments"
+    }
+  ]
+}
