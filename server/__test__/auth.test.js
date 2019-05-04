@@ -167,5 +167,17 @@ describe('/AUTHENTICATION',()=>{
 					done();
 				});
 		});
+		it('should check user password mismatch', (done) => {
+			chai.request(app)
+				.post('/api/v1/login')
+				.send({
+					email: 'test1@mail.com',
+					password: 'qwerQ@qwerre13'
+				}).end((err, res) => {
+					res.should.have.status(401);
+					if (err) return done();
+					done();
+				});
+		});
 	});
 });
