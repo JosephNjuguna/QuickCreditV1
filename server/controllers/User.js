@@ -67,7 +67,7 @@ class Authentication {
 				password,
 			} = req.body;
 			const addUser = new Usermodel(email);
-			if (addUser.loginUser()) {
+			if (addUser.loginUser()) {				
 				if (EncryptData.validPassword(password, addUser.result.password)) {
 					const token = Token.generateToken({
 						email: addUser.result.email,
@@ -88,18 +88,14 @@ class Authentication {
 						},
 					});
 				}
-				return res.status(400).json({
-					status: 400,
+				return res.status(401).json({
+					status: 401,
 					message: 'Incorrect password',
 				});
 			}
+		} catch (error) {
 			return res.status(404).json({
 				message: 'email not found. Sign up to create account',
-			});
-		} catch (error) {
-			return res.status.json({
-				status: 500,
-				message: 'Internal server error',
 			});
 		}
 	}
