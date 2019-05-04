@@ -2,13 +2,14 @@ import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import app from '../../app';
+import LoanId from '../helpers/Uid';
 
 const {
     expect
 } = chai;
 chai.use(chaiHttp);
 let userToken, adminToken;
-const loanId = 1;
+const loanId = LoanId.loanId();
 const wrongId = 1232;
 
 describe('/LOAN', () => {
@@ -115,7 +116,7 @@ describe('/LOAN', () => {
                 .get('/api/v1/loans')
                 .set('authorization', `Bearer ${userToken}`)
                 .end((err, res) => {
-                    res.should.have.status(401);
+                    res.should.have.status(403);
                     if (err) return done();
                     done();
                 });
