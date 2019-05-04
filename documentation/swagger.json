@@ -8,11 +8,11 @@
       "email":"josephnjuguna482@gmail.com"
     }
   },
-  "host": "quickcredv1.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/api/v1",
   "securityDefinitions": {},
   "schemes": [
-    "https"
+    "http"
   ],
   "consumes": [
     "application/json"
@@ -41,35 +41,35 @@
           {
             "name": "firstname",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "users firstname. should be 3 characters or more"
           },
           {
             "name": "lastname",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "users last name"
           },
           {
             "name": "address",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "user home address"
           },
           {
             "name": "email",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "users email address"
           },
           {
             "name": "password",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "users password. should be 3 character or more"
           }
@@ -81,7 +81,7 @@
           "400":{
             "description": "Bad request. ensure required fields are filled"
           },
-          "419":{
+          "409":{
             "description": "Conflict. email already in use"
           },
           "500":{
@@ -110,14 +110,14 @@
           {
             "name": "email",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
-            "description": "existing users email address"
+            "description": "users' email address"
           },
           {
             "name": "password",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "password matching password of the email address used to sign up"
           }
@@ -129,11 +129,11 @@
           "400":{
             "description" : "Bad request.Fields required"
           },
+          "401":{
+            "description" : "Unauthorized. Password Mismatch"
+          },
           "404":{
             "description" : "Email not found"
-          },
-          "500":{
-            "description": "Internal server error"
           }
         }
       }
@@ -165,7 +165,7 @@
             "description" : "user profile sucess"
           },
           "401":{
-            "description" : "Not authorized"
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
           },
           "500":{
             "description": "Internal Server Error"
@@ -218,7 +218,7 @@
               "description" : "user profile sucess"
             },
             "401":{
-              "description" : "Not authorized"
+              "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
             },
             "500":{
               "description": "Internal Server Error"
@@ -227,12 +227,13 @@
         }
       }
     },
+
     "/users": {
       "get": {
         "description": "the admin user can get all the users in the database. \nBoth verified and unverified.",
         "summary": "Admin get all users",
         "tags": [
-          "Admin User"
+          "Admin View and Verify users"
         ],
         "operationId": "UsersGet",
         "deprecated": false,
@@ -252,8 +253,11 @@
           "200": {
             "description": "successful request"
           },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
           },
           "500":{
             "description":"Internal server error"
@@ -267,7 +271,7 @@
         "description": "Admin user can get one user from the database\nusing userid",
         "summary": "admin get  one user",
         "tags": [
-          "Admin User"
+          "Admin View and Verify users"
         ],
         "operationId": "User4Get",
         "deprecated": false,
@@ -285,10 +289,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Sucess"
+            "description": "Success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
           },
           "404": {
-            "description": "Not found"
+            "description": "User Not found"
           },
           "500": {
             "description": "Internal server error"
@@ -297,12 +304,12 @@
       }
     },
 
-    "/user/edwardev@gmail.com/verify": {
+    "/user/josephnjuguna482@gmail.com/verify": {
       "patch": {
         "description": "admin can mark user as verified or unverified",
-        "summary": "verify user",
+        "summary": "verify user using their email address",
         "tags": [
-          "Admin User"
+          "Admin View and Verify users"
         ],
         "operationId": "UserEdwardevGmailComVerifyPatch",
         "deprecated": false,
@@ -317,20 +324,13 @@
             "name": "Authorization",
             "in": "header",
             "required": false,
-            "default": "Bearer {token}",
+            "default": "Bearer",
             "type": "string"
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
           },
           {
             "name": "status",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": ""
           }
@@ -339,8 +339,11 @@
           "200": {
             "description": "Sucess"
           },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
           "404": {
-            "description": "Not found"
+            "description": "User Email Not found"
           },
           "500": {
             "description": "Internal server error"
@@ -352,9 +355,9 @@
     "/requestloan": {
       "post": {
         "description": "TODO: Add Description",
-        "summary": "request loan",
+        "summary": "user request loan only once",
         "tags": [
-          "User request loan"
+          "User Request Loan"
         ],
         "operationId": "RequestloanPost",
         "deprecated": false,
@@ -373,16 +376,9 @@
             "type": "string"
           },
           {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          },
-          {
-            "name": "loan",
+            "name": "amount",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": ""
           }
@@ -390,6 +386,9 @@
         "responses": {
           "200": {
             "description": "Sucess"
+          },
+          "400":{
+            "description" : "Bad Request. Loan field and User Token required"
           },
           "409": {
             "description": "User has a  loan request already"
@@ -426,57 +425,11 @@
           "200": {
             "description": "Success"
           },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
           "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-
-    "/payloan": {
-      "post": {
-        "description": "user can pay their loans",
-        "summary": "user pay loan",
-        "tags": [
-          "User pay loan"
-        ],
-        "operationId": "PayloanPost",
-        "deprecated": false,
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": false,
-            "default": "Bearer {token}",
-            "type": "string"
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          },
-          {
-            "name": "amount",
-            "in": "formData",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Sucess"
+            "description": "User Loan Request not found"
           },
           "500": {
             "description": "Internal server error"
@@ -508,14 +461,25 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "headers": {}
+            "description": "Success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "403": {
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
+          },
+          "404": {
+            "description": "User Loan Request Records not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
 
-    "/loan/6": {
+    "/loan/1": {
       "get": {
         "description": "get a single loan by a user",
         "summary": "get a specific loan application",
@@ -532,16 +496,22 @@
             "name": "Authorization",
             "in": "header",
             "required": false,
-            "default": "Bearer {token}",
+            "default": "Bearer ",
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Sucess"
+            "description": "Success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "403": {
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
           },
           "404": {
-            "description": "Not found"
+            "description": "User Requested Loan Id not found"
           },
           "500": {
             "description": "Internal server error"
@@ -567,18 +537,62 @@
             "name": "Authorization",
             "in": "header",
             "required": false,
-            "default": "Bearer {token}",
+            "default": "Bearer ",
             "type": "string"
           },
           {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
+            "name": "status",
+            "in": "formData",
+            "required": false,
             "type": "string",
             "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "403": {
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
+          },
+          "404": {
+            "description": "User Requested Loan Id not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    
+    "/payloan/2": {
+      "post": {
+        "description": "user can pay their loans",
+        "summary": "user pay loan",
+        "tags": [
+          "User pay loan"
+        ],
+        "operationId": "PayloanPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer",
+            "type": "string"
           },
           {
-            "name": "status",
+            "name": "amount",
             "in": "formData",
             "required": true,
             "type": "string",
@@ -587,8 +601,16 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "headers": {}
+            "description": "Success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "404": {
+            "description": "Loan Id not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -610,7 +632,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "required": true,
+            "required": false,
             "default": "Bearer {token}",
             "type": "string"
           },
@@ -624,35 +646,26 @@
           {
             "name": "repaid",
             "in": "query",
-            "required": true,
-            "type": "boolean",
-            "description": "true : for repaid loans"
-          },
-          {
-            "name": "repaid",
-            "in": "query",
             "required": false,
-            "type": "boolean",
-            "description": "false: for non-repaid or rejected loans"
+            "type": "string",
+            "description": "true : for repaid loans"
           }
         ],
         "responses": {
           "200": {
-            "description": "success",
-            "headers": {}
+            "description": "success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "403": {
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
           },
           "404": {
-            "description": "no records found",
-            "headers": {}
-          }
-          ,
-          "400": {
-            "description": "Bad request.Token required",
-            "headers": {}
+            "description": "no records found"
           },
           "500": {
-            "description": "Internal server error",
-            "headers": {}
+            "description": "Internal server error"
           }
         }
       }
@@ -663,7 +676,7 @@
         "description": "TODO: Add Description",
         "summary": "check all payments",
         "tags": [
-          "Admin check payments"
+          "Admin check all payments"
         ],
         "operationId": "PaymentsGet",
         "deprecated": false,
@@ -681,13 +694,61 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "headers": {}
+            "description": "success"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "404": {
+            "description": "no records found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+
+    "/paymenthistory/2": {
+      "get": {
+        "description": "a user can view their payment history",
+        "summary": "users payment history",
+        "tags": [
+          "User view their Loan Payment History"
+        ],
+        "operationId": "PaymentsGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucessful"
+          },
+          "401":{
+            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          },
+          "403": {
+            "description": "Forbidden. Not authorized to acess the API Endpoint"
+          },
+          "404": {
+            "description": "no records found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
-
   },
   "tags": [
     {
@@ -697,16 +758,13 @@
       "name": "User Profile"
     },
     {
-      "name": "Admin User"
+      "name": "Admin View and Verify users"
     },
     {
-      "name": "User request loan"
+      "name": "User Request Loan"
     },
     {
       "name": "User view their loan request status"
-    },
-    {
-      "name": "User pay loan"
     },
     {
       "name": "Admin view all loan applications"
@@ -718,10 +776,16 @@
       "name": "Admin accept loan application"
     },
     {
+      "name": "User pay loan"
+    },
+    {
       "name": "Admin view loan based on their status: fully paid, not fully paid, not yet accepted"
     },
     {
-      "name": "Admin check payments"
+      "name": "Admin check all payments"
+    },
+    {
+      "name": "User view their Loan Payment History"
     }
   ]
 }
