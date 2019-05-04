@@ -1,6 +1,6 @@
 const loans = [
     {
-		loanId: 2,
+		loanId: 1,
 		user: 'josephnjuguna482@gmail.com',
 		requestedOn: '2019/05/1 09:31:08',
 		status: 'pending',
@@ -12,7 +12,7 @@ const loans = [
 		interestRate: 15
 	},
 	{
-		loanId: 3,
+		loanId: 2,
 		user: 'joe@gmail.com',
 		requestedOn: '2019/05/1 09:31:08',
 		status: 'accepted',
@@ -24,7 +24,7 @@ const loans = [
 		interestRate: 15
 	},
 	{
-		loanId: 4,
+		loanId: 3,
 		user: 'joe@gmail.com',
 		requestedOn: '2019/05/1 09:31:08',
 		status: 'accepted',
