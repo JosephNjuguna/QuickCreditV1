@@ -5,7 +5,7 @@ import LoanID from '../helpers/Uid';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const loanId = LoanID.uniqueId();
+const loanId = LoanID.loanId();
 const requestedOn = Date.date();
 
 class Loans {
