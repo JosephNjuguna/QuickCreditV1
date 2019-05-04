@@ -41,11 +41,12 @@ class Authentication {
 
 	async loginUser() {
 		const obj = db.find(o => o.email === this.payload);
-		if (obj) {
+		if (!obj) {
 			this.result = obj;
-			return true;
+			return false;
 		}
-		return false;
+		this.result = obj;
+		return true;
 	}
 
 	async userProfile() {
