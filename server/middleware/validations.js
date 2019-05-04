@@ -83,11 +83,6 @@ class Validations {
 				message = 'enter valid email';
 				if (!re.test(email) || email === '') return reqResponses.handleError(message, 400, res);
 			}
-			if (password) {
-				re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(\W|_)).{7,}$/;
-				message = 'enter valid password ';
-				if (!re.test(password)) return reqResponses.handleError(message, 400, res);
-			}
 			next();
 		} catch (error) {
 			return reqResponses.handleError(error.toString(), 500, res);
