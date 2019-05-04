@@ -41,7 +41,7 @@ class AuthValidator {
 			if (req.userData.email === 'admin123@gmail.com') {
 				next();
 			} else {
-				return res.status(401).json({
+				return res.status(403).json({
 					message: 'Access Denied! You are not allowed to access this route',
 				});
 			}
