@@ -1,17 +1,17 @@
+import jwt from 'jsonwebtoken';
 import Usermodel from '../models/Users';
 import Token from '../helpers/Jwt';
 import EncryptData from '../helpers/Encrypt';
 import userDate from '../helpers/Date';
 import Userid from '../helpers/Uid';
-import jwt from 'jsonwebtoken';
+import reqResponses from '../helpers/Responses';
 
 const status = 'unverified';
 const isAdmin = false;
 const signedupDate = userDate.date();
-const userId = Userid.uniqueId();
+const id = Userid.uniqueId();
 
 class Authentication {
-
 	static async registerUser(req, res) {
 		try {
 			const {
@@ -22,9 +22,8 @@ class Authentication {
 				password,
 			} = req.body;
 			const hashedPassword = EncryptData.generateHash(password);
-
 			const addUser = new Usermodel({
-				userId,
+				id,
 				email,
 				firstname,
 				lastname,
@@ -33,12 +32,9 @@ class Authentication {
 				status,
 				isAdmin,
 				signedupDate,
-			});			
+			});
 			if (!await addUser.registerUser()) {
-				return res.status(409).json({
-					status: 409,
-					message: 'email already in use',
-				});
+				reqResponses.handleError(409, 'Email already in use', res);
 			}
 			const token = Token.generateToken({
 				email,
@@ -47,16 +43,9 @@ class Authentication {
 				lastname,
 				address,
 			});
-			return res.status(201).json({
-				status: 201,
-				token,
-				data: addUser.result,
-			});
+			reqResponses.handleSignupsuccess(201, 'successfully created account', token, addUser.result, res);
 		} catch (error) {
-			return res.status(500).json({
-				status: 500,
-				message: 'internal server error',
-			});
+			// reqResponses.internalError(res);
 		}
 	}
 
@@ -67,7 +56,7 @@ class Authentication {
 				password,
 			} = req.body;
 			const addUser = new Usermodel(email);
-			if (addUser.loginUser()) {				
+			if (addUser.loginUser()) {
 				if (EncryptData.validPassword(password, addUser.result.password)) {
 					const token = Token.generateToken({
 						email: addUser.result.email,
@@ -76,27 +65,19 @@ class Authentication {
 						lastname: addUser.result.lastname,
 						address: addUser.result.address,
 					});
-					return res.status(200).json({
-						status: 200,
-						message: `welcome ${addUser.result.firstname}`,
-						data: {
-							token,
-							id: addUser.result.userid,
-							firstname: addUser.result.firstname,
-							lastname: addUser.result.lastname,
-							email: addUser.result.email,
-						},
-					});
+					const responseMessage = {
+						token,
+						id: addUser.result.userid,
+						firstname: addUser.result.firstname,
+						lastname: addUser.result.lastname,
+						email: addUser.result.email,
+					};
+					reqResponses.handleSuccess(200, `welcome ${addUser.result.firstname}`, responseMessage, res);
 				}
-				return res.status(401).json({
-					status: 401,
-					message: 'Incorrect password',
-				});
+				reqResponses.handleError(401, 'Incorrect password', res);
 			}
 		} catch (error) {
-			return res.status(404).json({
-				message: 'email not found. Sign up to create account',
-			});
+			// reqResponses.handleError(404, 'email not found. Sign up to create account', res);
 		}
 	}
 
@@ -105,54 +86,30 @@ class Authentication {
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
-			const userProfileid = req.userData.id;			
-
+			const userProfileid = req.userData.id;
 			const userInfo = new Usermodel(userProfileid);
 			if (!await userInfo.userProfile()) {
-				return res.status(404).json({
-					message: 'user Id not found',
-				});
+				reqResponses.handleError(404, 'User id not found', res);
 			}
-			return res.status(200).json({
-				status: 200,
-				message: 'welcome',
-				user: userInfo.result,
-			});
+			reqResponses.handleSuccess(200, `welcome ${userInfo.result.firstname}`, userInfo.result, res);
 		} catch (error) {
-			return res.status(500).json({
-				status: 500,
-				message: 'internal server error',
-			});
+			// reqResponses.internalError(res);
 		}
 	}
 
 	static async verifyUser(req, res) {
 		try {
-			const email = req.params.email;
-			const status = req.body.status;
-			
-			const userVerifaction = new Usermodel({email, status});
+			const { email } = req.params;
+			const { status } = req.body;
+			const userVerifaction = new Usermodel({ email, status });
 			if (!await userVerifaction.verifyUser()) {
-				return res.status(404).json({
-					success: false,
-					message: 'User email not found',
-				});
-			}			
-			return res.status(200).json({
-				status: 200,
-				message: 'user verified successfully',
-				data: userVerifaction.result,
-			});
+				reqResponses.handleError(404, 'User email not found', res);
+			}
+			reqResponses.handleSuccess(200, 'user verified successfully', userVerifaction.result, res);
 		} catch (error) {
-			console.log(error);
-			return res.status(500).json({
-				status: 500,
-				message: 'internal server error',
-			});
+			// reqResponses.internalError(res);
 		}
 	}
-
-
-};
+}
 
 export default Authentication;
