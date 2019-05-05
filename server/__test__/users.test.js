@@ -4,50 +4,49 @@ import jwt from 'jsonwebtoken';
 import app from '../../app';
 
 const {
-	expect
+	expect,
 } = chai;
 chai.use(chaiHttp);
 
-let userToken, wrongIdToken, adminToken;
+let userToken; let wrongIdToken; let
+	adminToken;
 
 describe('/USER PROFILE', () => {
-
 	before('generate JWT', (done) => {
 		adminToken = jwt.sign({
-				email: 'admin123@gmail.com',
-				id: 1,
-				firstname: 'main',
-				lastname: 'admin',
-				address: 'database',
-			},
-			process.env.JWT_KEY, {
-				expiresIn: '1h',
-			});
+			email: 'admin123@gmail.com',
+			id: 1,
+			firstname: 'main',
+			lastname: 'admin',
+			address: 'database',
+		},
+		process.env.JWT_KEY, {
+			expiresIn: '1h',
+		});
 		userToken = jwt.sign({
-				email: 'josephnjuguna482@gmail.com',
-				id: 2,
-				firstname: 'Joseph',
-				lastname: 'Njuguna',
-				address: 'Kenya',
-			},
-			process.env.JWT_KEY, {
-				expiresIn: '1h',
-			});
+			email: 'josephnjuguna482@gmail.com',
+			id: 2,
+			firstname: 'Joseph',
+			lastname: 'Njuguna',
+			address: 'Kenya',
+		},
+		process.env.JWT_KEY, {
+			expiresIn: '1h',
+		});
 		wrongIdToken = jwt.sign({
-				email: 'josephnjuguna482@gmail.com',
-				id: 1087,
-				firstname: 'Joseph',
-				lastname: 'Njuguna',
-				address: 'Kenya',
-			},
-			process.env.JWT_KEY, {
-				expiresIn: '1h',
-			});
+			email: 'josephnjuguna482@gmail.com',
+			id: 1087,
+			firstname: 'Joseph',
+			lastname: 'Njuguna',
+			address: 'Kenya',
+		},
+		process.env.JWT_KEY, {
+			expiresIn: '1h',
+		});
 		done();
 	});
 
 	describe('/GET user profile data using tokens', () => {
-
 		it('should check user ID,EMAIL is not available', (done) => {
 			chai.request(app)
 				.get('/api/v1/profile')
@@ -69,17 +68,15 @@ describe('/USER PROFILE', () => {
 					done();
 				});
 		});
-
 	});
 
 	describe('/PATCH admin verify user', () => {
-		
 		it('should check user email is not available', (done) => {
 			chai.request(app)
 				.patch('/api/v1/user/test2@mail.com/verify')
 				.set('authorization', `Bearer ${adminToken}`)
 				.send({
-					status: "verified"
+					status: 'verified',
 				})
 				.end((err, res) => {
 					expect(res.status).equals(404);
@@ -93,7 +90,7 @@ describe('/USER PROFILE', () => {
 				.patch('/api/v1/user/josephnjuguna482@gmail.com/verify')
 				.set('authorization', `Bearer ${adminToken}`)
 				.send({
-					status: "verified"
+					status: 'verified',
 				})
 				.end((err, res) => {
 					res.should.have.status(200);
@@ -101,7 +98,5 @@ describe('/USER PROFILE', () => {
 					done();
 				});
 		});
-
 	});
-
 });

@@ -1,3 +1,3 @@
-let payments = [];
+const payments = [];
 
 export default payments;

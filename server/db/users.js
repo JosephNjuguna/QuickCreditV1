@@ -22,7 +22,7 @@ const users = [
 		isadmin: false,
 		userid: 'id-i323dyys',
 		signedup_date: '2019/04/18 00:48:08',
-	}
+	},
 ];
 
 export default users;

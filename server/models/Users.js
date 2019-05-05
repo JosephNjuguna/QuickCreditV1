@@ -1,7 +1,6 @@
 import db from '../db/users';
 
 class Authentication {
-
 	constructor(payload = null) {
 		this.payload = payload;
 		this.result = null;
@@ -9,7 +8,7 @@ class Authentication {
 
 	async registerUser() {
 		const {
-			userId,
+			id,
 			email,
 			firstname,
 			lastname,
@@ -20,7 +19,7 @@ class Authentication {
 			signedupDate,
 		} = this.payload;
 		const user = {
-			userId,
+			id,
 			email,
 			firstname,
 			lastname,
@@ -41,11 +40,12 @@ class Authentication {
 
 	async loginUser() {
 		const obj = db.find(o => o.email === this.payload);
-		if (obj) {
+		if (!obj) {
 			this.result = obj;
-			return true;
+			return false;
 		}
-		return false;
+		this.result = obj;
+		return true;
 	}
 
 	async userProfile() {
@@ -60,28 +60,27 @@ class Authentication {
 	async verifyUser() {
 		const {
 			status,
-			email
+			email,
 		} = this.payload;
 		const obj = db.find(o => o.email === email);
 		if (!obj) {
 			return false;
-		} else {
-			const verifiedUser = {
-				id: obj.id,
-				email: obj.email,
-				firstname: obj.firstname,
-				lastname: obj.lastname,
-				password: obj.password,
-				address: obj.address,
-				status: status || obj.status,
-				isAdmin: obj.isadmin,
-				userid: obj.userid,
-				signedup_date: obj.signedup_date
-			};
-			db.splice(obj.id - 1, 1, verifiedUser);
-			this.result = verifiedUser;
-			return true;
 		}
+		const verifiedUser = {
+			id: obj.id,
+			email: obj.email,
+			firstname: obj.firstname,
+			lastname: obj.lastname,
+			password: obj.password,
+			address: obj.address,
+			status: status || obj.status,
+			isAdmin: obj.isadmin,
+			userid: obj.userid,
+			signedup_date: obj.signedup_date,
+		};
+		db.splice(obj.id - 1, 1, verifiedUser);
+		this.result = verifiedUser;
+		return true;
 	}
 }
 export default Authentication;

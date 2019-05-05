@@ -1,15 +1,32 @@
 class Responses {
-	static handleSuccess(res, message) {
-		res.status(message[0]).json({
-			success: message[2],
-			message: message[1],
+	static handleSignupsuccess(statusCode, message, token, data, res) {
+		res.status(statusCode).json({
+			status: statusCode,
+			token,
+			message,
+			data,
 		});
 	}
 
-	static handleError(message, statusCode, res) {
+	static handleSuccess(statusCode, message, data, res) {
 		res.status(statusCode).json({
-			success: false,
+			status: statusCode,
 			message,
+			data,
+		});
+	}
+
+	static handleError(statusCode, message, res) {
+		res.status(statusCode).json({
+			status: statusCode,
+			message,
+		});
+	}
+
+	static internalError(res) {
+		res.status(500).json({
+			status: 500,
+			error: 'Internal server error',
 		});
 	}
 }
