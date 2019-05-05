@@ -8,25 +8,13 @@ class Validations {
 				lastname,
 				address,
 				email,
-				password,
+				password
 			} = req.body;
-
+			
 			let re;
 
-			if (!firstname || firstname === '') {
-				return reqResponses.handleError(400, 'firstname field empty', res);
-			}
-			if (!lastname || lastname === '') {
-				return reqResponses.handleError(400, 'lastname field empty', res);
-			}
-			if (!address || address === '') {
-				return reqResponses.handleError(400, 'email field empty', res);
-			}
-			if (!email || email === '') {
-				return reqResponses.handleError(400, 'email field empty', res);
-			}
-			if (!password || password === '') {
-				return reqResponses.handleError(400, 'password field empty', res);
+			if (!firstname || !lastname || !address || !email || !password) {
+				return reqResponses.handleError(400, 'Ensure you have: Firstname, Lastname, address, email and password fields filled', res);
 			}
 			if (firstname) {
 				re = /[a-zA-Z]{3,}/;
@@ -98,7 +86,7 @@ class Validations {
 		let re;
 
 		if (!loan || loan === '') {
-			reqResponses.handleError(400, 'loan field required', res);
+			return reqResponses.handleError(400, 'loan field required', res);
 		}
 		if (loan) {
 			re = /[0-9_]{3,}/;
