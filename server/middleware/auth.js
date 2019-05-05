@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import reqResponses from '../helpers/Responses';
 
 dotenv.config();
 
@@ -8,10 +9,7 @@ class AuthValidator {
 	static async checkUser(req, res, next) {
 		try {
 			if (!req.headers.authorization || req.headers.authorization === '') {
-				return res.status(400).json({
-					status: 400,
-					message: 'Token  required',
-				});
+				return reqResponses.handleError(400, 'Token  required', res);
 			}
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -30,10 +28,7 @@ class AuthValidator {
 	static async checkAdmin(req, res, next) {
 		try {
 			if (!req.headers.authorization || req.headers.authorization === '') {
-				return res.status(400).json({
-					status: 400,
-					message: 'Token  required',
-				});
+				return reqResponses.handleError(400, 'Admin Token required', res);
 			}
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
