@@ -11,29 +11,20 @@ const requestedOn = Date.date();
 
 class Loans {
 	static async requestLoan(req, res) {
-		try {
+		try {			
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
-
-			const {
-				firstname,
-				lastname,
-				email,
-				id,
-			} = req.userData;
 			const loan = req.body.amount;
-
 			const loanModel = new Models({
 				loan,
-				firstname,
-				lastname,
-				email,
-				id,
+				firstname :req.userData.firstname,
+				lastname :req.userData.lastname,
+				email :req.userData.email,
+				id :req.userData.id,
 				requestedOn,
 				loanId,
 			});
-
 			if (!await loanModel.requestloan()) {
 				reqResponses.handleError(409, 'You cant request loan twice. You already have a loan request.', res);
 			}
@@ -48,15 +39,11 @@ class Loans {
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
-			const { email } = req.userData;
-			const userloanId = req.params.loan_id;
-			const loanInstallment = req.body.amount;
-			const paidOn = requestedOn;
 			const loanModel = new Models({
-				email,
-				loanInstallment,
-				paidOn,
-				userloanId,
+				email: req.userData.email,
+				loanInstallment : req.body.amount,
+				paidOn: requestedOn,
+				userloanId :req.params.loan_id,
 			});
 
 			if (!await loanModel.payloan()) {
