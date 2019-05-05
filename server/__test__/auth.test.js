@@ -6,9 +6,8 @@ chai.should();
 chai.use(chaiHttp);
 
 
-describe('/AUTHENTICATION',()=>{
-    describe('/POST signup', () => {
-
+describe('/AUTHENTICATION', () => {
+	describe('/POST signup', () => {
 		it('should check user has firstname field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -17,15 +16,15 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'testlastname',
 					email: 'test1@mail.com',
 					address: 'nairobi',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@q123',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
 					if (err) return done();
 					done();
 				});
-        });
-        
+		});
+
 		it('should check user has lastname field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -34,7 +33,7 @@ describe('/AUTHENTICATION',()=>{
 					lastname: '',
 					address: 'nairobi',
 					email: 'test1@mail.com',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
@@ -51,15 +50,15 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'testlastname',
 					address: '',
 					email: 'test1@mail.com',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
 					if (err) return done();
 					done();
 				});
-        });
-        
+		});
+
 		it('should check user has email field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -68,15 +67,15 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'testlastname',
 					address: 'nairobi',
 					email: '',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
 					if (err) return done();
 					done();
 				});
-        });
-        
+		});
+
 		it('should check user has password field and value', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -85,15 +84,15 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'testlastname',
 					address: 'nairobi',
 					email: 'test1@mail.com',
-					password: ''
+					password: '',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
 					if (err) return done();
 					done();
 				});
-        });
-        
+		});
+
 		it('should successfully sign up user', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -102,15 +101,15 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'testlastname',
 					address: 'nairobi',
 					email: 'test1@mail.com',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(201);
 					if (err) return done();
 					done();
 				});
-        });
-        
+		});
+
 		it('should check user already exist', (done) => {
 			chai.request(app)
 				.post('/api/v1/signup')
@@ -119,14 +118,14 @@ describe('/AUTHENTICATION',()=>{
 					lastname: 'Njuguna',
 					address: 'Kenya',
 					email: 'josephnjuguna482@gmail.com',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(409);
 					if (err) return done();
 					done();
 				});
-        });
+		});
 	});
 	describe('/POST login', () => {
 		it('should have user email', (done) => {
@@ -134,7 +133,7 @@ describe('/AUTHENTICATION',()=>{
 				.post('/api/v1/login')
 				.send({
 					email: '',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				})
 				.end((err, res) => {
 					res.should.have.status(400);
@@ -160,7 +159,7 @@ describe('/AUTHENTICATION',()=>{
 				.post('/api/v1/login')
 				.send({
 					email: 'test1@mail.com',
-					password: 'qwerQ@qwerre123'
+					password: 'qwerQ@qwerre123',
 				}).end((err, res) => {
 					res.should.have.status(200);
 					if (err) return done();
@@ -172,7 +171,7 @@ describe('/AUTHENTICATION',()=>{
 				.post('/api/v1/login')
 				.send({
 					email: 'test1@mail.com',
-					password: 'qwerQ@qwerre13'
+					password: 'qwerQ@qwerre13',
 				}).end((err, res) => {
 					res.should.have.status(401);
 					if (err) return done();
