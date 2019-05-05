@@ -7,29 +7,18 @@ class Authentication {
 	}
 
 	async registerUser() {
-		const {
-			id,
-			email,
-			firstname,
-			lastname,
-			hashedPassword,
-			address,
-			status,
-			isAdmin,
-			signedupDate,
-		} = this.payload;
 		const user = {
-			id,
-			email,
-			firstname,
-			lastname,
-			password: hashedPassword,
-			address,
-			status,
-			isAdmin,
-			signedupDate,
+			id: this.payload.id,
+			email: this.payload.email,
+			firstname : this.payload.firstname,
+			lastname: this.payload.lastname,
+			password: this.payload.password,
+			address :this.payload.address,
+			status: this.payload.status,
+			isAdmin : this.payload.isAdmin,
+			signedupDate : this.payload.signedupDate,
 		};
-		const obj = db.find(o => o.email === email);
+		const obj = db.find(o => o.email === this.payload.email);
 		if (!obj) {
 			db.push(user);
 			this.result = user;
