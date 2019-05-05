@@ -14,21 +14,14 @@ const id = Userid.uniqueId();
 class Authentication {
 	static async registerUser(req, res) {
 		try {
-			const {
-				firstname,
-				lastname,
-				address,
-				email,
-				password,
-			} = req.body;
-			const hashedPassword = EncryptData.generateHash(password);
+			const hashedPassword = EncryptData.generateHash(req.body.password);
 			const addUser = new Usermodel({
 				id,
-				email,
-				firstname,
-				lastname,
-				hashedPassword,
-				address,
+				email: req.body.email,
+				firstname: req.body.firstname,
+				lastname:req.body.lastname,
+				password:hashedPassword,
+				address: req.body.address,
 				status,
 				isAdmin,
 				signedupDate,
@@ -37,11 +30,11 @@ class Authentication {
 				reqResponses.handleError(409, 'Email already in use', res);
 			}
 			const token = Token.generateToken({
-				email,
+				email: req.body.email,
 				id: addUser.result.user_id,
-				firstname,
-				lastname,
-				address,
+				firstname: req.body.firstname,
+				lastname:req.body.lastname,
+				address: req.body.address,
 			});
 			reqResponses.handleSignupsuccess(201, 'successfully created account', token, addUser.result, res);
 		} catch (error) {
@@ -65,14 +58,7 @@ class Authentication {
 						lastname: addUser.result.lastname,
 						address: addUser.result.address,
 					});
-					const responseMessage = {
-						token,
-						id: addUser.result.userid,
-						firstname: addUser.result.firstname,
-						lastname: addUser.result.lastname,
-						email: addUser.result.email,
-					};
-					reqResponses.handleSuccess(200, `welcome ${addUser.result.firstname}`, responseMessage, res);
+					reqResponses.handleSignupsuccess(200, `welcome ${addUser.result.firstname}`,token, addUser.result, res);
 				}
 				reqResponses.handleError(401, 'Incorrect password', res);
 			}
@@ -99,9 +85,16 @@ class Authentication {
 
 	static async verifyUser(req, res) {
 		try {
-			const { email } = req.params;
-			const { status } = req.body;
-			const userVerifaction = new Usermodel({ email, status });
+			const {
+				email
+			} = req.params;
+			const {
+				status
+			} = req.body;
+			const userVerifaction = new Usermodel({
+				email,
+				status
+			});
 			if (!await userVerifaction.verifyUser()) {
 				reqResponses.handleError(404, 'User email not found', res);
 			}
