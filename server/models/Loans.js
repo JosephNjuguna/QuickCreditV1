@@ -2,7 +2,6 @@ import db from '../db/loans';
 import payments from '../db/payments';
 
 class LoanModel {
-
 	constructor(payload = null) {
 		this.payload = payload;
 		this.result = null;
@@ -10,8 +9,9 @@ class LoanModel {
 
 	async totalAmountdata(amount) {
 		const interestRate = 15;
-		let numberOfInstallments, installmentAmount, totalamounttoPay, totalAmount;
-		totalAmount = ((interestRate / 100) * amount) + amount;
+		let numberOfInstallments; let installmentAmount; let
+			totalamounttoPay;
+		const totalAmount = ((interestRate / 100) * amount) + amount;
 		if (totalAmount <= 4000) {
 			numberOfInstallments = 4;
 		} else if (totalAmount > 4000 && totalAmount <= 9000) {
@@ -28,8 +28,8 @@ class LoanModel {
 			numberOfInstallments = 16;
 		}
 		if (totalAmount % numberOfInstallments !== 0) {
-			let remainder = totalAmount % numberOfInstallments;
-			let remaining = numberOfInstallments - remainder;
+			const remainder = totalAmount % numberOfInstallments;
+			const remaining = numberOfInstallments - remainder;
 			totalamounttoPay = totalAmount + remaining;
 		} else {
 			totalamounttoPay = totalAmount;
@@ -39,7 +39,7 @@ class LoanModel {
 			numberOfInstallments,
 			installmentAmount,
 			totalamounttoPay,
-			interestRate
+			interestRate,
 		};
 	}
 
@@ -52,9 +52,9 @@ class LoanModel {
 			userId,
 			requestedOn,
 			loanId,
-		} = this.payload;		
+		} = this.payload;
 		const amount = parseFloat(loan);
-		var b = await this.totalAmountdata(amount);
+		const b = await this.totalAmountdata(amount);
 		const obj = await db.find(o => o.user === email);
 
 		if (!obj) {
@@ -76,105 +76,96 @@ class LoanModel {
 			db.push(loanInfo);
 			this.result = loanInfo;
 			return true;
-		} else {
-			return false;
 		}
-
+		return false;
 	}
 
 	async payloan() {
-
 		const {
+			email,
 			loanInstallment,
 			paidOn,
-			loanId
+			userloanId,
 		} = this.payload;
 		const amount = parseFloat(loanInstallment);
-		const obj = db.find(o => o.loanId === parseInt(loanId));
-
+		const obj = db.find(o => o.loanId === parseInt(userloanId) && o.user === email);
 		if (obj) {
 			const userLoanPayments = payments.filter(o => o.loanId = obj.loanId);
 			if (userLoanPayments.length === 0) {
-				this.result = 'kindly wait for your application to be accepted'
+				this.result = 'kindly wait for your application to be accepted';
 				return false;
-			} else {
-				if (userLoanPayments.length === 1) {
-
-					let payment = userLoanPayments[0];
-					if (payment.paymentNo == 0) {
-						let newPayment = {
-							loanId: obj.loanId,
-							user: obj.user,
-							amount: obj.totalAmounttopay,
-							installmentsAmount: payment.paid = amount,
-							balance: payment.balance = obj.totalAmounttopay - amount,
-							paymentNo: payment.paymentNo = 1,
-							paidOn: paidOn
-						}
-						this.result = newPayment;
-						return true;
-					} else {
-						let newPayment = {
-							loanId: obj.loanId,
-							user: obj.user,
-							amount: obj.totalAmounttopay,
-							installmentsAmount: amount,
-							balance: payment.balance - amount,
-							paymentNo: 2,
-							paidOn: paidOn
-						}
-						payments.push(newPayment);
-						this.result = newPayment;
-						return true;
-					}
-				} else {
-					const paymentsCount = userLoanPayments.length;
-					let latestPayment = userLoanPayments[paymentsCount - 1];
-					if (latestPayment.balance === 0) {
-						const loanAccept = {
-							id: obj.id,
-							loanId: obj.loanId,
-							user: obj.user,
-							requestedOn: obj.requestedOn,
-							status: obj.status,
-							repaid: true,
-							tenor: obj.tenor,
-							principalAmount: obj.principalAmount,
-							paymentInstallment: obj.paymentInstallment,
-							totalAmounttopay: obj.totalAmounttopay,
-							balance: obj.totalAmounttopay,
-							interestRate: obj.interestRate,
-							paidOn: paidOn
-						};
-						db.splice(obj.id - 1, 1, loanAccept);
-						this.result = "Thank for completing your loan payment"
-						return true;
-					} else {
-						let newPayment = {
-							loanId: obj.loanId,
-							user: obj.user,
-							amount: obj.totalAmounttopay,
-							installmentsAmount: amount,
-							balance: latestPayment.balance - amount,
-							paymentNo: paymentsCount + 1,
-							paidOn: paidOn
-						}
-						payments.push(newPayment);
-						this.result = newPayment;
-						return true;
-					}
-				}
 			}
-		} else if (!obj) {
-			this.result = "There was an error paying your loan";
+			if (userLoanPayments.length === 1) {
+				const payment = userLoanPayments[0];
+				if (payment.paymentNo === 0) {
+					const newPayment = {
+						loanId: obj.loanId,
+						user: obj.user,
+						amount: obj.totalAmounttopay,
+						installmentsAmount: payment.paid = amount,
+						balance: payment.balance = obj.totalAmounttopay - amount,
+						paymentNo: payment.paymentNo = 1,
+						paidOn,
+					};
+					this.result = newPayment;
+					return true;
+				}
+				const newPayment = {
+					loanId: obj.loanId,
+					user: obj.user,
+					amount: obj.totalAmounttopay,
+					installmentsAmount: amount,
+					balance: payment.balance - amount,
+					paymentNo: 2,
+					paidOn,
+				};
+				payments.push(newPayment);
+				this.result = newPayment;
+				return true;
+			}
+			const paymentsCount = userLoanPayments.length;
+			const latestPayment = userLoanPayments[paymentsCount - 1];
+			if (latestPayment.balance === 0) {
+				const loanAccept = {
+					id: obj.id,
+					loanId: obj.loanId,
+					user: obj.user,
+					requestedOn: obj.requestedOn,
+					status: obj.status,
+					repaid: true,
+					tenor: obj.tenor,
+					principalAmount: obj.principalAmount,
+					paymentInstallment: obj.paymentInstallment,
+					totalAmounttopay: obj.totalAmounttopay,
+					balance: obj.totalAmounttopay,
+					interestRate: obj.interestRate,
+					paidOn,
+				};
+				db.splice(obj.id - 1, 1, loanAccept);
+				this.result = 'Thank for completing your loan payment';
+				return true;
+			}
+			const newPayment = {
+				loanId: obj.loanId,
+				user: obj.user,
+				amount: obj.totalAmounttopay,
+				installmentsAmount: amount,
+				balance: latestPayment.balance - amount,
+				paymentNo: paymentsCount + 1,
+				paidOn,
+			};
+			payments.push(newPayment);
+			this.result = newPayment;
+			return true;
+		} if (!obj) {
+			this.result = 'There was an error paying your loan';
 			return false;
-
 		}
 	}
 
 	async allLoanapplications() {
 		if (db.length === 0) {
-			this.result = "There are no any loan applications"
+			this.result = 'There are no any loan applications';
 			return false;
 		}
 		this.result = db;
@@ -192,10 +183,10 @@ class LoanModel {
 
 	async acceptloanapplication() {
 		const {
-			loanId,
-			status
+			userloanId,
+			status,
 		} = this.payload;
-		const obj = db.find(o => o.loanId === parseInt(loanId));
+		const obj = db.find(o => o.loanId === parseInt(userloanId));
 		if (!obj) {
 			return false;
 		}
@@ -205,16 +196,16 @@ class LoanModel {
 			amount: obj.totalAmounttopay,
 			balance: obj.totalAmounttopay,
 			paid: 0,
-			paymentNo: 0
-		}
-		payments.push(aPayment)
+			paymentNo: 0,
+		};
+		payments.push(aPayment);
 
 		const loanAccept = {
 			id: obj.id,
 			loanId: obj.loanId,
 			user: obj.user,
 			requestedOn: obj.requestedOn,
-			status: status,
+			status,
 			repaid: obj.repaid,
 			tenor: obj.tenor,
 			principalAmount: obj.principalAmount,
@@ -229,10 +220,9 @@ class LoanModel {
 	}
 
 	async loanRepaidstatus() {
-
 		const {
 			status,
-			repaid
+			repaid,
 		} = this.payload;
 
 		let repaidStatus;
@@ -251,9 +241,9 @@ class LoanModel {
 		return true;
 	}
 
-	async loanRepayment(){
-		const { email,loanId } = this.payload;
-		const obj = payments.filter(o => o.user === email && o.loanId === parseInt(loanId));
+	async loanRepayment() {
+		const { email, userloanId } = this.payload;
+		const obj = payments.filter(o => o.user === email && o.loanId === parseInt(userloanId));
 		if (obj.length === 0) {
 			return false;
 		}
