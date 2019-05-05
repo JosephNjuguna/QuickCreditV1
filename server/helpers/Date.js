@@ -1,5 +1,5 @@
-class commonDate{
-    static date() {
+class commonDate {
+	static date() {
 		const m = new Date();
 		const dateString = `${m.getFullYear()}/${
 			(`0${m.getMonth() + 1}`).slice(-2)}/${
