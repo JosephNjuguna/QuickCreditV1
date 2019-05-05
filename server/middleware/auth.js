@@ -52,6 +52,5 @@ class AuthValidator {
 			});
 		}
 	}
-
 }
 export default AuthValidator;
