@@ -1,12 +1,15 @@
 import db from '../db/loans';
+import userId from '../db/users';
+
 class Uid {
 	static uniqueId() {
-		const userId = `id-${Math.random().toString(36).substr(2, 16)}`;
-		return userId;
+		const user = userId.length + 1;
+		return user;
 	}
+
 	static loanId() {
-		const loan_Id = db.length + 1;
-		return loan_Id;
+		const loanId = db.length + 1;
+		return loanId;
 	}
 }
 export default Uid;
