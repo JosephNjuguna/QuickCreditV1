@@ -2,9 +2,9 @@ class Responses {
 	static handleSignupsuccess(statusCode, message, token, data, res) {
 		res.status(statusCode).json({
 			status: statusCode,
-			token,
 			message,
-			data,
+			token,
+			data
 		});
 	}
 
@@ -12,21 +12,21 @@ class Responses {
 		res.status(statusCode).json({
 			status: statusCode,
 			message,
-			data,
+			data
 		});
 	}
 
 	static handleError(statusCode, message, res) {
 		res.status(statusCode).json({
 			status: statusCode,
-			message,
+			message: message
 		});
 	}
 
 	static internalError(res) {
 		res.status(500).json({
 			status: 500,
-			error: 'Internal server error',
+			error: 'Internal server error'
 		});
 	}
 }
