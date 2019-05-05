@@ -30,23 +30,23 @@ class Validations {
 			}
 			if (firstname) {
 				re = /[a-zA-Z]{3,}/;
-				if (!re.test(firstname)) return reqResponses.handleError(400, 'enter valid firstname', res);
+				if (!re.test(firstname)) reqResponses.handleError(400, 'enter valid firstname', res);
 			}
 			if (lastname) {
 				re = /[a-zA-Z]{3,}/;
-				if (!re.test(lastname)) return reqResponses.handleError(400, 'enter valid lastname', res);
+				if (!re.test(lastname)) reqResponses.handleError(400, 'enter valid lastname', res);
 			}
 			if (address) {
 				re = /[a-zA-Z]{3,}_*[0-9_]*[a-zA-Z]*_*/;
-				if (!re.test(address)) return reqResponses.handleError(400, 'address validation failed', res);
+				if (!re.test(address)) reqResponses.handleError(400, 'address validation failed', res);
 			}
 			if (email) {
 				re = /(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)/;
-				if (!re.test(email)) return reqResponses.handleError(400, 'enter valid email e.g user@gmail.com', res);
+				if (!re.test(email)) reqResponses.handleError(400, 'enter valid email e.g user@gmail.com', res);
 			}
 			if (password) {
 				re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(\W|_)).{7,}$/;
-				if (!re.test(password)) return reqResponses.handleError(400, 'enter valid password. should be 7 character and more and contain letters and numbers', res);
+				if (!re.test(password)) reqResponses.handleError(400, 'enter valid password. should be 7 character and more and contain letters and numbers', res);
 			}
 			next();
 		} catch (error) {
@@ -63,15 +63,15 @@ class Validations {
 
 			let re;
 			if (email === '' || password === '' || !email || !password) {
-				return reqResponses.handleError(400, 'Ensure all fields are filled', res);
+				reqResponses.handleError(400, 'Ensure all fields are filled', res);
 			}
 			if (email) {
 				re = /(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)/;
-				if (!re.test(email) || email === '') return reqResponses.handleError(400, 'enter valid email', res);
+				if (!re.test(email) || email === '') reqResponses.handleError(400, 'enter valid email', res);
 			}
 			next();
 		} catch (error) {
-			return reqResponses.handleError(error.toString(), 500, res);
+			reqResponses.handleError(error.toString(), 500, res);
 		}
 	}
 
@@ -83,14 +83,12 @@ class Validations {
 			const re = /^[a-zA-Z]/;
 			if (id) {
 				if (id === '*' || id === '@' || id === '+' || id === '--' || re.test(id)) {
-					return res.status(404).json({
-						message: 'Your url is invalid',
-					});
+					reqResponses.handleError(404, 'Your url is invalid', res);
 				}
 			}
 			next();
 		} catch (error) {
-			return reqResponses.handleError(error.toString(), 500, res);
+			reqResponses.handleError(error.toString(), 500, res);
 		}
 	}
 
@@ -100,17 +98,12 @@ class Validations {
 		let re;
 
 		if (!loan || loan === '') {
-			return res.status(400).json({
-				status: 400,
-				message: 'loan field required',
-			});
+			reqResponses.handleError(400, 'loan field required', res);
 		}
 		if (loan) {
 			re = /[0-9_]{3,}/;
 			if (!re.test(loan)) {
-				return res.status(400).json({
-					message: 'enter 3 digits or more',
-				});
+				reqResponses.handleError(400, 'enter 3 digits or more', res);
 			}
 		}
 		next();
