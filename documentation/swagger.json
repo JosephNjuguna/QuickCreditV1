@@ -164,65 +164,11 @@
           "200":{
             "description" : "user profile sucess"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "500":{
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-
-    "/updateprofile": {
-      "patch": {
-        "description": "TODO: Add Description",
-        "summary": "user update profile",
-        "tags": [
-          "User Profile"
-        ],
-        "operationId": "UpdateprofilePatch",
-        "deprecated": false,
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": false,
-            "default": "Bearer {token}",
-            "type": "string"
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          },
-          {
-            "name": "firstname",
-            "in": "formData",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
-        "responses": {
-          "responses": {
-            "200":{
-              "description" : "user profile sucess"
-            },
-            "401":{
-              "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
-            },
-            "500":{
-              "description": "Internal Server Error"
-            }
           }
         }
       }
@@ -339,8 +285,8 @@
           "200": {
             "description": "Sucess"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "404": {
             "description": "User Email Not found"
@@ -463,8 +409,8 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"
@@ -504,8 +450,8 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"
@@ -552,8 +498,8 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"
@@ -603,8 +549,8 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "404": {
             "description": "Loan Id not found"
@@ -655,8 +601,8 @@
           "200": {
             "description": "success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"
@@ -696,8 +642,8 @@
           "200": {
             "description": "success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "404": {
             "description": "no records found"
@@ -734,8 +680,8 @@
           "200": {
             "description": "sucessful"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"
