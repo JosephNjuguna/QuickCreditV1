@@ -42,6 +42,27 @@ class LoanModel {
 		};
 	}
 
+	async userloanStatus() {
+		const obj = db.find(o => o.user === this.payload);
+		if (!obj) {
+			return false;
+		}
+		const singleLoandetail = {
+			id: obj.loanId,
+			user: obj.user,
+			requestedOn: obj.requestedOn,
+			status: obj.status,
+			repaid: obj.repaid,
+			tenor: obj.tenor,
+			amount: obj.principalAmount,
+			totalAmounttopay: obj.totalAmounttopay,
+			paymentInstallment: obj.paymentInstallment,
+			balance: obj.balance
+		};
+		this.result = singleLoandetail;
+		return true;
+	}
+
 	async requestloan() {
 		const amount = parseFloat(this.payload.loan);
 		const calculateTotalamount = await this.totalAmountdata(amount);
