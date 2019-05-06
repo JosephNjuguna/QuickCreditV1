@@ -8,11 +8,11 @@
       "email":"josephnjuguna482@gmail.com"
     }
   },
-  "host": "localhost:3000",
+  "host": "quickcredv1.herokuapp.com",
   "basePath": "/api/v1",
   "securityDefinitions": {},
   "schemes": [
-    "http"
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -291,11 +291,11 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since  API endpoint secured"
           },
           "404": {
-            "description": "User Not found"
+            "description": "User Record Not found"
           },
           "500": {
             "description": "Internal server error"
