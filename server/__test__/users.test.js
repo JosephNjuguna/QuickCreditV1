@@ -3,13 +3,10 @@ import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
 import app from '../../app';
 
-const {
-	expect,
-} = chai;
+const { expect } = chai;
 chai.use(chaiHttp);
-
-let userToken; let wrongIdToken; let
-	adminToken;
+let userToken, wrongIdToken, adminToken;
+const wrongId = 134243;
 
 describe('/USER PROFILE', () => {
 	before('generate JWT', (done) => {
@@ -93,6 +90,20 @@ describe('/USER PROFILE', () => {
 					status: 'verified',
 				})
 				.end((err, res) => {
+					res.should.have.status(200);
+					if (err) return done();
+					done();
+				});
+		});
+	});
+
+	describe('/GET admin and all users data', () => {
+		it('admin should get all users', (done) => {
+			chai.request(app)
+				.get('/api/v1/users')
+				.set('authorization', `Bearer ${adminToken}`)
+				.end((err, res) => {
+					expect(res.body.message).equals('All users record');
 					res.should.have.status(200);
 					if (err) return done();
 					done();
