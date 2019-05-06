@@ -1,5 +1,6 @@
 import db from '../db/loans';
 import payments from '../db/payments';
+import totalAmountdetail from '../helpers/Totalamount';
 
 const interestRate = 15;
 class LoanModel {
@@ -7,44 +8,30 @@ class LoanModel {
 		this.payload = payload;
 		this.result = null;
 	}
-
-	async totalAmountdata(amount) {
-		let numberOfInstallments, installmentAmount, totalamounttoPay;
-		const totalAmount = ((interestRate / 100) * amount) + amount;
-		if (totalAmount <= 4000) {
-			numberOfInstallments = 4;
-		} else if (totalAmount > 4000 && totalAmount <= 9000) {
-			numberOfInstallments = 6;
-		} else if (totalAmount > 9000 && totalAmount <= 12000) {
-			numberOfInstallments = 8;
-		} else if (totalAmount > 12000 && totalAmount <= 15000) {
-			numberOfInstallments = 10;
-		} else if (totalAmount > 15000 && totalAmount <= 18000) {
-			numberOfInstallments = 12;
-		} else if (totalAmount > 18000 && totalAmount <= 20000) {
-			numberOfInstallments = 14;
-		} else if (totalAmount > 20000 && totalAmount <= 24000) {
-			numberOfInstallments = 16;
+	async userloanStatus() {
+		const obj = db.find(o => o.user === this.payload);
+		if (!obj) {
+			return false;
 		}
-		if (totalAmount % numberOfInstallments !== 0) {
-			const remainder = totalAmount % numberOfInstallments;
-			const remaining = numberOfInstallments - remainder;
-			totalamounttoPay = totalAmount + remaining;
-		} else {
-			totalamounttoPay = totalAmount;
-		}
-		installmentAmount = totalamounttoPay / numberOfInstallments;
-		return {
-			numberOfInstallments,
-			installmentAmount,
-			totalamounttoPay,
-			interestRate,
+		const singleLoandetail = {
+			id: obj.loanId,
+			user: obj.user,
+			requestedOn: obj.requestedOn,
+			status: obj.status,
+			repaid: obj.repaid,
+			tenor: obj.tenor,
+			amount: obj.principalAmount,
+			totalAmounttopay: obj.totalAmounttopay,
+			paymentInstallment: obj.paymentInstallment,
+			balance: obj.balance
 		};
+		this.result = singleLoandetail;
+		return true;
 	}
 
 	async requestloan() {
 		const amount = parseFloat(this.payload.loan);
-		const calculateTotalamount = await this.totalAmountdata(amount);
+		const calculateTotalamount = totalAmountdetail.totalAmountdata(amount);
 		const obj = await db.find(o => o.user === this.payload.email);
 		if (!obj) {
 			const loanInfo = {

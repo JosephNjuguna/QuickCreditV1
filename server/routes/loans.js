@@ -36,4 +36,8 @@ route.get('/paymenthistory/:loan_id',
 	checkAuth.checkUser,
 	loans.repaymentHistory);
 
+route.get('/viewloanrequest',
+	checkAuth.checkUser,
+	loans.userloanStatus);
+	
 export default route;

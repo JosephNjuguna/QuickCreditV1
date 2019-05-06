@@ -8,8 +8,8 @@ const {
 	expect,
 } = chai;
 chai.use(chaiHttp);
-let userToken; let
-	adminToken;
+
+let userToken,adminToken;
 const loanId = LoanId.loanId();
 const wrongId = 1232;
 
@@ -367,4 +367,29 @@ describe('/LOAN', () => {
 				});
 		});
 	});
+
+	describe('/GET user', () => {
+		it('should check user loan application status', (done) => {
+			chai.request(app)
+				.get('/api/v1/viewloanrequest')
+				.set('authorization', `Bearer ${userToken}`)
+				.end((err, res) => {
+					res.should.have.status(200);
+					if (err) return done();
+					done();
+				});
+		});
+
+		it('should check user has no loan application', (done) => {
+			chai.request(app)
+				.get('/api/v1/viewloanrequest')
+				.set('authorization', `Bearer ${adminToken}`)
+				.end((err, res) => {
+					res.should.have.status(404);
+					if (err) return done();
+					done();
+				});
+		});
+	});
+
 });
