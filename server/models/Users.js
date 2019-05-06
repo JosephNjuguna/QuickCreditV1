@@ -79,5 +79,14 @@ class Authentication {
 		this.result = db;
 		return true;
 	}
+
+	async oneUser() {
+		const obj = db.find(o => o.id === parseInt(this.payload) || o.userid === this.payload);
+		if (!obj) {
+			return false;
+		}
+		this.result = obj;
+		return true;
+	}
 }
 export default Authentication;
