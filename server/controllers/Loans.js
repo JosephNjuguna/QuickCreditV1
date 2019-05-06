@@ -10,6 +10,7 @@ const loanId = LoanID.loanId();
 const requestedOn = Date.date();
 
 class Loans {
+
 	static async requestLoan(req, res) {
 		try {
 			const token = req.headers.authorization.split(' ')[1];
@@ -44,7 +45,7 @@ class Loans {
 			if (!await loanStatus.userloanStatus()) {
 				reqResponses.handleError(404, loanStatus.result, res);
 			}
-			reqResponses.handleSuccess(200, 'successful', loanStatus.result, res);
+			reqResponses.handleSuccess(200, "success", loanStatus.result, res);
 		} catch (error) {
 			// reqResponses.internalError(res);
 		}
@@ -151,11 +152,24 @@ class Loans {
 			if (!await paymentHistory.loanRepayment()) {
 				reqResponses.handleError(404, 'Loan id not found', res);
 			}
-			reqResponses.handleSuccess(200, 'Loan Repayment Record ', await paymentHistory.result, res);
+			reqResponses.handleSuccess(200, 'Loan Repayment Record ', paymentHistory.result, res);
 		} catch (error) {
 			// reqResponses.handleError(404, 'Loan id not found', res);
 		}
 	}
+
+	static async allLoanpayments(req, res) {
+		try {
+			const loanData = new Models();
+			if (!await loanData.allLoanpayments()) {
+				reqResponses.handleError(404, loanData.result, res);
+			}
+			reqResponses.handleSuccess(200, 'Loan Repayment History Record ', loanData.result, res);
+		} catch (error) {
+			// return reqResponses.handleError(404, 'Loan id not found', res);
+		}
+	}
+
 }
 
 export default Loans;

@@ -14,7 +14,7 @@ class LoanModel {
 			return false;
 		}
 		const singleLoandetail = {
-			id: obj.loanId,
+			loanId: obj.loanId,
 			user: obj.user,
 			requestedOn: obj.requestedOn,
 			status: obj.status,
@@ -239,5 +239,15 @@ class LoanModel {
 		this.result = obj;
 		return true;
 	}
+
+	async allLoanpayments() {
+		if (payments.length === 0) {
+			this.result = "There are no any loan payments"
+			return false;
+		}
+		this.result = payments;
+		return true;
+	}
+
 }
 export default LoanModel;
