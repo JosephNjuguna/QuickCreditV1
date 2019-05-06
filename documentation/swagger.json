@@ -425,8 +425,8 @@
           "200": {
             "description": "Success"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since API endpoint secured"
           },
           "404": {
             "description": "User Loan Request not found"
