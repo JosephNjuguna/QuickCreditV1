@@ -88,7 +88,6 @@ class Authentication {
 		}
 	}
 
-
 	static async allUsers(req, res) {
 		try {
 			const allUserdata = new Usermodel();
@@ -101,6 +100,18 @@ class Authentication {
 		}
 	}
 
+	static async oneUser(req, res) {
+		try {
+			const uId = req.params.u_id;
+			const singleUser = new Usermodel(uId);
+			if (!await singleUser.oneUser()) {
+				reqResponses.handleError(404, 'user Id not found', res);
+			}
+			reqResponses.handleSuccess(200, `${ singleUser.result.firstname} record`,  singleUser.result, res);
+		} catch (error) {			
+			// reqResponses.internalError(res);
+		}
+	}
 
 	static async verifyUser(req, res) {
 		try {
