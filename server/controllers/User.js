@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import Usermodel from '../models/Users';
-import Token from '../helpers/Jwt';
 import EncryptData from '../helpers/Encrypt';
 import userDate from '../helpers/Date';
 import Userid from '../helpers/Uid';
 import reqResponses from '../helpers/Responses';
+import Token from '../helpers/Token';
 
 const status = 'unverified';
 const isAdmin = false;
@@ -12,16 +12,24 @@ const signedupDate = userDate.date();
 const id = Userid.uniqueId();
 
 class Authentication {
+	
 	static async registerUser(req, res) {
 		try {
-			const hashedPassword = EncryptData.generateHash(req.body.password);
+			const {
+				firstname,
+				lastname,
+				address,
+				email,
+				password
+			} = req.body;
+			const hashedPassword = EncryptData.generateHash(password);
 			const addUser = new Usermodel({
 				id,
-				email: req.body.email,
-				firstname: req.body.firstname,
-				lastname:req.body.lastname,
-				password:hashedPassword,
-				address: req.body.address,
+				email,
+				firstname,
+				lastname,
+				password: hashedPassword,
+				address,
 				status,
 				isAdmin,
 				signedupDate,
@@ -29,15 +37,9 @@ class Authentication {
 			if (!await addUser.registerUser()) {
 				reqResponses.handleError(409, 'Email already in use', res);
 			}
-			const token = Token.generateToken({
-				email: req.body.email,
-				id: addUser.result.user_id,
-				firstname: req.body.firstname,
-				lastname:req.body.lastname,
-				address: req.body.address,
-			});
+			const token = Token.genToken(email,id, firstname, lastname, address);
 			reqResponses.handleSignupsuccess(201, 'successfully created account', token, addUser.result, res);
-		} catch (error) {
+		} catch (error) {			
 			// reqResponses.internalError(res);
 		}
 	}
@@ -50,17 +52,20 @@ class Authentication {
 			} = req.body;
 			const addUser = new Usermodel(email);
 			if (addUser.loginUser()) {
+
+				const email = addUser.result.email;
+				const id = addUser.result.userid;
+				const firstname= addUser.result.firstname;
+				const lastname = addUser.result.lastname;
+				const address= addUser.result.address;
+
 				if (EncryptData.validPassword(password, addUser.result.password)) {
-					const token = Token.generateToken({
-						email: addUser.result.email,
-						id: addUser.result.userid,
-						firstname: addUser.result.firstname,
-						lastname: addUser.result.lastname,
-						address: addUser.result.address,
-					});
+					const token = Token.genToken(email,id, firstname, lastname, address);
 					reqResponses.handleSignupsuccess(200, `welcome ${addUser.result.firstname}`,token, addUser.result, res);
 				}
+
 				reqResponses.handleError(401, 'Incorrect password', res);
+
 			}
 		} catch (error) {
 			// reqResponses.handleError(404, 'email not found. Sign up to create account', res);
