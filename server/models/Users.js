@@ -71,5 +71,13 @@ class Authentication {
 		this.result = verifiedUser;
 		return true;
 	}
+	
+	async allUsers() {
+		if (db.length === 0) {
+			return false;
+		}
+		this.result = db;
+		return true;
+	}
 }
 export default Authentication;
