@@ -9,10 +9,7 @@ class LoanModel {
 	}
 
 	async totalAmountdata(amount) {
-		let numberOfInstallments;
-		let installmentAmount;
-		let
-			totalamounttoPay;
+		let numberOfInstallments, installmentAmount, totalamounttoPay;
 		const totalAmount = ((interestRate / 100) * amount) + amount;
 		if (totalAmount <= 4000) {
 			numberOfInstallments = 4;
