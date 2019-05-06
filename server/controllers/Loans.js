@@ -11,17 +11,17 @@ const requestedOn = Date.date();
 
 class Loans {
 	static async requestLoan(req, res) {
-		try {			
+		try {
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
 			const loan = req.body.amount;
 			const loanModel = new Models({
 				loan,
-				firstname :req.userData.firstname,
-				lastname :req.userData.lastname,
-				email :req.userData.email,
-				id :req.userData.id,
+				firstname: req.userData.firstname,
+				lastname: req.userData.lastname,
+				email: req.userData.email,
+				id: req.userData.id,
 				requestedOn,
 				loanId,
 			});
@@ -34,6 +34,22 @@ class Loans {
 		}
 	}
 
+	static async userloanStatus(req, res) {
+		try {
+			const token = req.headers.authorization.split(' ')[1];
+			const decoded = jwt.verify(token, process.env.JWT_KEY);
+			req.userData = decoded;
+			const userRequestLoanemail = req.userData.email;
+			const loanStatus = new Models(userRequestLoanemail);
+			if (!await loanStatus.userloanStatus()) {
+				reqResponses.handleError(404, loanStatus.result, res);
+			}
+			reqResponses.handleSuccess(200, 'loan payment successful', loanStatus.result, res);
+		} catch (error) {
+			// reqResponses.internalError(res);
+		}
+	}
+
 	static async payloan(req, res) {
 		try {
 			const token = req.headers.authorization.split(' ')[1];
@@ -41,9 +57,9 @@ class Loans {
 			req.userData = decoded;
 			const loanModel = new Models({
 				email: req.userData.email,
-				loanInstallment : req.body.amount,
+				loanInstallment: req.body.amount,
 				paidOn: requestedOn,
-				userloanId :req.params.loan_id,
+				userloanId: req.params.loan_id,
 			});
 
 			if (!await loanModel.payloan()) {
@@ -75,14 +91,15 @@ class Loans {
 				reqResponses.handleError(404, 'Loan id not found', res);
 			}
 			reqResponses.handleSuccess(200, 'success', oneloanData.result, res);
-		} catch (error) {
-		}
+		} catch (error) {}
 	}
 
 	static async acceptloanapplication(req, res) {
 		try {
 			const userloanId = req.params.loan_id;
-			const { status } = req.body;
+			const {
+				status
+			} = req.body;
 			const acceptLoan = new Models({
 				userloanId,
 				status,
@@ -122,7 +139,9 @@ class Loans {
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
 
-			const { email } = req.userData;
+			const {
+				email
+			} = req.userData;
 			const userloanId = req.params.loan_id;
 
 			const paymentHistory = new Models({
