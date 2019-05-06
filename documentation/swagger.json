@@ -253,8 +253,8 @@
           "200": {
             "description": "successful request"
           },
-          "401":{
-            "description" : "Not Authenticated.Valid Token required since  API endpoint secured"
+          "400":{
+            "description" : "Valid Token required since API endpoint is secured"
           },
           "403": {
             "description": "Forbidden. Not authorized to acess the API Endpoint"

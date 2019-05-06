@@ -88,6 +88,20 @@ class Authentication {
 		}
 	}
 
+
+	static async allUsers(req, res) {
+		try {
+			const allUserdata = new Usermodel();
+			if (!await allUserdata.allUsers()) {
+				reqResponses.handleError(404, 'No Users record found', res);
+			}
+			reqResponses.handleSuccess(200, `All users record`, allUserdata.result, res);
+		} catch (error) {
+			// reqResponses.internalError(res);
+		}
+	}
+
+
 	static async verifyUser(req, res) {
 		try {
 			const {

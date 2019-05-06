@@ -44,7 +44,7 @@ class Loans {
 			if (!await loanStatus.userloanStatus()) {
 				reqResponses.handleError(404, loanStatus.result, res);
 			}
-			reqResponses.handleSuccess(200, 'loan payment successful', loanStatus.result, res);
+			reqResponses.handleSuccess(200, 'successful', loanStatus.result, res);
 		} catch (error) {
 			// reqResponses.internalError(res);
 		}
