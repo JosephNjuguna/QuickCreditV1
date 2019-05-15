@@ -126,6 +126,7 @@ describe('/AUTHENTICATION', () => {
 					done();
 				});
 		});
+		
 	});
 	describe('/POST login', () => {
 		it('should have user email', (done) => {
