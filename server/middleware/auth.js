@@ -10,7 +10,8 @@ class AuthValidator {
 	static async checkUser(req, res, next) {
 		try {
 			const tokenData = req.headers.authorization;
-			if (Token.checkToken(tokenData,res)) {			const token = req.headers.authorization.split(' ')[1];
+			if (Token.checkToken(tokenData,res)) {			
+				const token = req.headers.authorization.split(' ')[1];
 				const decoded = jwt.verify(token, process.env.JWT_KEY);
 				req.userData = decoded;
 				next();
@@ -47,5 +48,6 @@ class AuthValidator {
 			});
 		}
 	}
+	
 }
 export default AuthValidator;
