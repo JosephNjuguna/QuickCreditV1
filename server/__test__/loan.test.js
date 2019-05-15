@@ -3,10 +3,9 @@ import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import LoanId from '../helpers/Uid';
+import { isObject } from 'util';
 
-const {
-	expect,
-} = chai;
+const { expect } = chai;
 chai.use(chaiHttp);
 
 let userToken,adminToken;
@@ -40,6 +39,7 @@ describe('/LOAN', () => {
 	});
 
 	describe('/POST user request loan', () => {
+		
 		it('should check user token not available', (done) => {
 			chai.request(app)
 				.post('/api/v1/requestloan')
@@ -78,6 +78,21 @@ describe('/LOAN', () => {
 				});
 		});
 
+		it('should check invalid loan  amount request', (done) => {
+			chai.request(app)
+				.post('/api/v1/requestloan')
+				.send({
+					amount: 200,
+				})
+				.set('authorization', `Bearer ${userToken}`)
+				.end((err, res) => {
+					res.should.have.status(400);
+					expect(res.body.message).equals('Enter correct loan amount, between 500sh - 20000sh');
+					if (err) return done();
+					done();
+				});
+		});
+
 		it('should check successful loan request', (done) => {
 			chai.request(app)
 				.post('/api/v1/requestloan')
@@ -87,6 +102,7 @@ describe('/LOAN', () => {
 				.set('authorization', `Bearer ${userToken}`)
 				.end((err, res) => {
 					res.should.have.status(200);
+					expect(res.body.message).equals('Loan request successful');
 					if (err) return done();
 					done();
 				});
@@ -101,6 +117,7 @@ describe('/LOAN', () => {
 				.set('authorization', `Bearer ${userToken}`)
 				.end((err, res) => {
 					res.should.have.status(409);
+					expect(res.body.message).equals('You cant request loan twice. You already have a loan request.');
 					if (err) return done();
 					done();
 				});
@@ -148,6 +165,7 @@ describe('/LOAN', () => {
 				.set('authorization', `Bearer ${adminToken}`)
 				.end((err, res) => {
 					res.should.have.status(200);
+					expect(res.body.message).equals("success");
 					if (err) return done();
 					done();
 				});
@@ -164,6 +182,7 @@ describe('/LOAN', () => {
 				})
 				.end((err, res) => {
 					expect(res.status).equals(400);
+					expect(res.body.message).equals("Token required");
 					if (err) return done();
 					done();
 				});
@@ -192,6 +211,7 @@ describe('/LOAN', () => {
 				})
 				.end((err, res) => {
 					res.should.have.status(200);
+					expect(res.body.message).equals('loan accepted successfully')
 					if (err) return done();
 					done();
 				});
@@ -205,6 +225,7 @@ describe('/LOAN', () => {
 				.set('authorization', '')
 				.end((err, res) => {
 					expect(res.status).equals(400);
+					expect(res.body.message).equals("Token required");
 					if (err) return done();
 					done();
 				});
@@ -216,6 +237,7 @@ describe('/LOAN', () => {
 				.set('authorization', `Bearer ${adminToken}`)
 				.end((err, res) => {
 					expect(res.status).equals(200);
+					expect(res.body.message).equals("loan status");
 					if (err) return done();
 					done();
 				});
@@ -240,6 +262,7 @@ describe('/LOAN', () => {
 				.set('authorization', '')
 				.end((err, res) => {
 					expect(res.status).equals(400);
+					expect(res.body.message).equals("Token required");
 					if (err) return done();
 					done();
 				});
@@ -337,6 +360,7 @@ describe('/LOAN', () => {
 				.set('authorization', '')
 				.end((err, res) => {
 					expect(res.status).equals(400);
+					expect(res.body.message).equals("Token required");
 					if (err) return done();
 					done();
 				});
@@ -399,6 +423,7 @@ describe('/LOAN', () => {
 				.set('authorization', `Bearer ${adminToken}`)
 				.end((err, res) => {
 					res.should.have.status(200);
+					expect(res.body.message).equals('Loan Repayment History Record')
 					if (err) return done();
 					done();
 				});
