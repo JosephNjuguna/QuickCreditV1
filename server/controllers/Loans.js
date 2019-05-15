@@ -110,7 +110,7 @@ class Loans {
 			}
 			return reqResponses.handleSuccess(200, 'loan accepted successfully', acceptLoan.result, res);
 		} catch (error) {
-			// reqResponses.internalError(res);
+			reqResponses.internalError(res);
 		}
 	}
 
@@ -164,7 +164,7 @@ class Loans {
 			if (!await loanData.allLoanpayments()) {
 				reqResponses.handleError(404, loanData.result, res);
 			}
-			reqResponses.handleSuccess(200, 'Loan Repayment History Record ', loanData.result, res);
+			reqResponses.handleSuccess(200, 'Loan Repayment History Record', loanData.result, res);
 		} catch (error) {
 			// return reqResponses.handleError(404, 'Loan id not found', res);
 		}
