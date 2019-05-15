@@ -80,7 +80,7 @@ class Authentication {
 			const userProfileid = req.userData.id;
 			const userInfo = new Usermodel(userProfileid);
 			if (!await userInfo.userProfile()) {
-				reqResponses.handleError(404, 'User id not found', res);
+				reqResponses.handleError(404, 'id not found', res);
 			}
 			reqResponses.handleSuccess(200, `welcome ${userInfo.result.firstname}`, userInfo.result, res);
 		} catch (error) {

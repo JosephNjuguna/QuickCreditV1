@@ -80,9 +80,7 @@ class Validations {
 	}
 
 	static async validateLoan(req, res, next) {
-		const loan = req.body.amount;
-		console.log(loan);
-		
+		const loan = req.body.amount;		
 		if (!loan || loan === '') {
 			return reqResponses.handleError(400, 'loan field required', res);
 		}
@@ -91,6 +89,6 @@ class Validations {
 		}
 		next();
 	}
-	
+
 }
 export default Validations;
