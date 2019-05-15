@@ -117,6 +117,7 @@ describe('/USER PROFILE', () => {
 				.set('authorization', `Bearer ${adminToken}`)
 				.end((err, res) => {
 					res.should.have.status(404);
+					expect(res.body.message).equals('User id not found');
 					if (err) return done();
 					done();
 				});
