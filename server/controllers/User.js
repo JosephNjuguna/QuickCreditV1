@@ -77,8 +77,8 @@ class Authentication {
 			const token = req.headers.authorization.split(' ')[1];
 			const decoded = jwt.verify(token, process.env.JWT_KEY);
 			req.userData = decoded;
-			const userProfileid = req.userData.id;
-			const userInfo = new Usermodel(userProfileid);
+			const userProfile = req.userData.email;
+			const userInfo = new Usermodel(userProfile);
 			if (!await userInfo.userProfile()) {
 				reqResponses.handleError(404, 'id not found', res);
 			}

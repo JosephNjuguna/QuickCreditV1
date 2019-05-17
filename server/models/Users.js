@@ -38,7 +38,7 @@ class Authentication {
 	}
 
 	async userProfile() {
-		const obj = db.find(o => o.id === parseInt(this.payload) || o.userid === this.payload);
+		const obj = db.find(o => o.email === this.payload);
 		if (!obj) {
 			return false;
 		}

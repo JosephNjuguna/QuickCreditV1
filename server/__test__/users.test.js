@@ -46,16 +46,6 @@ describe('/USER PROFILE', () => {
 	});
 
 	describe('/GET user profile data using tokens', () => {
-		it('should check user ID,EMAIL is not available', (done) => {
-			chai.request(app)
-				.get('/api/v1/profile')
-				.set('authorization', `Bearer ${wrongIdToken}`)
-				.end((err, res) => {
-					res.should.have.status(404);
-					if (err) return done();
-					done();
-				});
-		});
 
 		it('should check user ID,EMAIL is available and return user data', (done) => {
 			chai.request(app)
