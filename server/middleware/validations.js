@@ -84,6 +84,10 @@ class Validations {
 		if (!loan || loan === '') {
 			return reqResponses.handleError(400, 'loan field required', res);
 		}
+		if(loan){
+			const re = /([0-9]*[.])?[0-9]+/;
+			if (!re.test(loan)) reqResponses.handleError(400, 'enter amount in digits not strings', res);
+		}
 		if (parseFloat(loan, 10) < parseFloat(500, 10) || parseFloat(loan)  > 20000 ) {
 			return reqResponses.handleError(400, 'Enter correct loan amount, between 500sh - 20000sh', res);
 		}
