@@ -212,7 +212,7 @@
       }
     },
 
-    "/user/4": {
+    "/user/{u_id}": {
       "get": {
         "description": "Admin user can get one user from the database\nusing userid",
         "summary": "admin get  one user",
@@ -231,6 +231,13 @@
             "required": false,
             "default": "Bearer {token}",
             "type": "string"
+          },
+          {
+            "name": "u_id",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
@@ -250,7 +257,7 @@
       }
     },
 
-    "/user/josephnjuguna482@gmail.com/verify": {
+    "/user/{email}/verify": {
       "patch": {
         "description": "admin can mark user as verified or unverified",
         "summary": "verify user using their email address",
@@ -272,6 +279,13 @@
             "required": false,
             "default": "Bearer",
             "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
           },
           {
             "name": "status",
@@ -425,7 +439,7 @@
       }
     },
 
-    "/loan/1": {
+    "/loan/{loan_id}": {
       "get": {
         "description": "get a single loan by a user",
         "summary": "get a specific loan application",
@@ -444,6 +458,13 @@
             "required": false,
             "default": "Bearer ",
             "type": "string"
+          },
+          {
+            "name": "loan_id",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
@@ -487,6 +508,13 @@
             "type": "string"
           },
           {
+            "name": "loan_id",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
             "name": "status",
             "in": "formData",
             "required": false,
@@ -514,7 +542,7 @@
       }
     },
     
-    "/payloan/2": {
+    "/payloan/{loan_id}": {
       "post": {
         "description": "user can pay their loans",
         "summary": "user pay loan",
@@ -536,6 +564,13 @@
             "required": false,
             "default": "Bearer",
             "type": "string"
+          },
+          {
+            "name": "loan_id",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
           },
           {
             "name": "amount",
@@ -655,7 +690,7 @@
       }
     },
 
-    "/paymenthistory/2": {
+    "/paymenthistory/{loan_id}": {
       "get": {
         "description": "a user can view their payment history",
         "summary": "users payment history",
@@ -674,6 +709,13 @@
             "required": false,
             "default": "Bearer {token}",
             "type": "string"
+          }, 
+          {
+            "name": "loan_id",
+            "in": "path",
+            "required": false,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
