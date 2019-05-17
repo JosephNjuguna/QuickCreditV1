@@ -1,6 +1,7 @@
 import reqResponses from '../helpers/Responses';
 
 class Validations {
+
 	static async validatesignup(req, res, next) {
 		try {
 			const {
@@ -65,9 +66,7 @@ class Validations {
 
 	static async validateID(req, res, next) {
 		try {
-			const {
-				id,
-			} = req.params;
+			const id = req.params.loan_id;
 			const re = /^[a-zA-Z]/;
 			if (id) {
 				if (id === '*' || id === '@' || id === '+' || id === '--' || re.test(id)) {
@@ -81,20 +80,15 @@ class Validations {
 	}
 
 	static async validateLoan(req, res, next) {
-		const loan = req.body.amount;
-
-		let re;
-
+		const loan = req.body.amount;		
 		if (!loan || loan === '') {
 			return reqResponses.handleError(400, 'loan field required', res);
 		}
-		if (loan) {
-			re = /[0-9_]{3,}/;
-			if (!re.test(loan)) {
-				reqResponses.handleError(400, 'enter 3 digits or more', res);
-			}
+		if (parseFloat(loan, 10) < parseFloat(500, 10) || parseFloat(loan)  > 20000 ) {
+			return reqResponses.handleError(400, 'Enter correct loan amount, between 500sh - 20000sh', res);
 		}
 		next();
 	}
+
 }
 export default Validations;
